@@ -6,6 +6,7 @@ from fastapi import File, Form, UploadFile
 
 
 class BookRespone(BaseModel):
+    id: int
     title: str
     description: Optional[str] = None
     author_name : str | None = None
@@ -91,6 +92,13 @@ class BookModel(BaseModel):
             raise ValueError("The uploaded file must have a filename.")
         if not filename.lower().endswith('.pdf'):
             raise ValueError("The book file must be a PDF")
+        return v
+    # 5. validate category_id
+    @field_validator('category_id')
+    @classmethod
+    def validate_category_id(cls, v: int):
+        if v <= 0:
+            raise ValueError('category_id must be greater than 0')
         return v
 
     async def save_cover_image(self) -> str | None:

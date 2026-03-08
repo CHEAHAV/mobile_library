@@ -7,4 +7,5 @@ greenlet==2.0.2
 pydantic==2.5.3
 email-validator==1.3.0
 psycopg2-binary==2.9.9
- python-multipart
+python-multipart
+aiofiles
