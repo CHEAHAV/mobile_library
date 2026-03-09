@@ -6,8 +6,8 @@ class Book {
   final double? rating;
   final String? language;
   final int? page;
-  final String filePath;
-  final String coverImage;
+  final String coverName;
+  final String fileName;
   final int? categoryId;
 
   Book({
@@ -18,8 +18,8 @@ class Book {
     this.rating,
     this.language,
     this.page,
-    required this.filePath,
-    required this.coverImage,
+    required this.coverName,
+    required this.fileName,
     this.categoryId,
   });
 
@@ -32,8 +32,8 @@ class Book {
       rating:      json['rating'] != null ? double.parse(json['rating'].toString()) : null,
       language:    json['language'] as String?,
       page:        (json['page'] as num?)?.toInt(),
-      filePath:    json['file_path'] as String? ?? '',
-      coverImage:  json['cover_image'] as String? ?? '',
+      coverName:   json['cover_name'] as String? ?? '',
+      fileName:    json['file_name'] as String? ?? '',
       categoryId:  (json['category_id'] as num?)?.toInt(),
     );
   }

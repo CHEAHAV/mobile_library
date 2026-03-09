@@ -1,16 +1,20 @@
-class Category{
-    final int id;
-    final String category;
+import 'package:frontend/models/book.dart';
 
-    Category({
-        required this.id,
-        required this.category,
-    });
+class Category {
+  final String categoryName;
+  final List<Book> books;
 
-    factory Category.fromson(Map<String, dynamic> json){
-        return Category(
-            id : json['id'],
-            category : json['category_name'],
-        );
-    }
+  Category({
+    required this.categoryName,
+    this.books = const [],
+  });
+
+  factory Category.fromJson(Map<String, dynamic> json) {
+    return Category(
+      categoryName: json['category_name'] as String? ?? '',
+      books: (json['books'] as List<dynamic>? ?? [])
+          .map((b) => Book.fromJson(b))
+          .toList(),
+    );
+  }
 }
