@@ -35,7 +35,9 @@ class _PdfViewerScreenState extends State<PdfViewerScreen> {
       final response = await http.get(Uri.parse(widget.downloadUrl));
       if (response.statusCode == 200) {
         final dir = await getApplicationDocumentsDirectory();
-        final fileName = widget.book.filePath.split('/').last; // ✅ fixed
+        final fileName = Uri.decodeComponent(
+          widget.downloadUrl.split('/').last, // ✅ decode Khmer filename
+        );
         final file = File('${dir.path}/$fileName');
         await file.writeAsBytes(response.bodyBytes);
         setState(() {
@@ -63,28 +65,28 @@ class _PdfViewerScreenState extends State<PdfViewerScreen> {
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
           : _error != null
-              ? Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Icon(Icons.error_outline, color: Colors.red, size: 48),
-                      const SizedBox(height: 16),
-                      Text(_error!, textAlign: TextAlign.center),
-                      const SizedBox(height: 16),
-                      ElevatedButton(
-                        onPressed: () {
-                          setState(() {
-                            _isLoading = true;
-                            _error = null;
-                          });
-                          _downloadAndSavePdf();
-                        },
-                        child: const Text('Retry'),
-                      ),
-                    ],
+          ? Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Icon(Icons.error_outline, color: Colors.red, size: 48),
+                  const SizedBox(height: 16),
+                  Text(_error!, textAlign: TextAlign.center),
+                  const SizedBox(height: 16),
+                  ElevatedButton(
+                    onPressed: () {
+                      setState(() {
+                        _isLoading = true;
+                        _error = null;
+                      });
+                      _downloadAndSavePdf();
+                    },
+                    child: const Text('Retry'),
                   ),
-                )
-              : PDFView(filePath: _localPath!),
+                ],
+              ),
+            )
+          : PDFView(filePath: _localPath!),
     );
   }
 }
