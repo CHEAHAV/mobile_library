@@ -10,7 +10,7 @@ class CategoryRespone(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
 
-# ✅ includes books list
+# includes books list
 class CategoryResponeWithBooks(BaseModel):
     category_name: str
     books: list[BookRespone] = []

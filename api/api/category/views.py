@@ -21,13 +21,13 @@ async def get_categories():
     return categories
 
 
-# ✅ only return categories that have books
+# only return categories that have books
 @app.get("/category/with-books", tags=["CATEGORY"], response_model=list[CategoryResponeWithBooks])
 async def get_categories_with_books():
     categories = db.query(CATEGORY).all()
     if not categories:
         raise HTTPException(status_code=404, detail="No categories found!")
-    # ✅ filter only categories that have at least 1 book
+    # filter only categories that have at least 1 book
     result = [cat for cat in categories if len(cat.books) > 0]
     if not result:
         raise HTTPException(status_code=404, detail="No categories with books found!")
@@ -47,7 +47,7 @@ async def update_category(category_id: int, categoryModel: CategoryModel = Depen
     category = db.query(CATEGORY).filter(CATEGORY.id == category_id).first()
     if not category:
         raise HTTPException(status_code=404, detail="Category not found!")
-    category.category_name = categoryModel.category_name
+    setattr(category, "category_name", categoryModel.category_name)
     db.commit()
     db.refresh(category)
     return {"message": f"Category id: {category_id} updated successfully!"}

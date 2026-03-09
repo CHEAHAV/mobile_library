@@ -19,7 +19,7 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
   @override
   void initState() {
     super.initState();
-    futureCategories = ApiService().fetchBooksByCategory();
+    futureCategories = ApiService().fetchCategoryWithBook();
   }
 
   @override

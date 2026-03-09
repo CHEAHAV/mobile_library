@@ -12,8 +12,8 @@ class BookRespone(BaseModel):
     rating: float
     language: Optional[str] = None
     page: int
-    cover_name: str    # ✅ image filename from DB
-    file_name: str     # ✅ PDF filename from DB
+    cover_name: str    # image filename from DB
+    file_name: str     # PDF filename from DB
     create_at: Optional[datetime] = None
 
     model_config = ConfigDict(from_attributes=True)
@@ -26,11 +26,10 @@ class BookModel(BaseModel):
     rating: float = 1.0
     language: Optional[str] = None
     page: int = 1
-    cover_image: UploadFile   # ✅ binary upload
-    file_path: UploadFile     # ✅ binary upload
+    cover_image: UploadFile   # binary upload
+    file_path: UploadFile     # binary upload
     category_id: int
 
-    model_config = ConfigDict(arbitrary_types_allowed=True)
 
     @classmethod
     def form(
@@ -50,6 +49,24 @@ class BookModel(BaseModel):
             rating=rating, language=language, page=page,
             cover_image=cover_image, file_path=file_path, category_id=category_id,
         )
+    
+    @field_validator('cover_image')
+    @classmethod
+    def validate_cover_image(cls, v: str):
+        if not v.strip():
+            raise ValueError('cover image must not be empty or whitespace')
+        if len(v) < 1:
+            raise ValueError('cover image must be at least 1 characters')
+        return v.strip()
+    
+    @field_validator('file_path')
+    @classmethod
+    def validate_file_path(cls, v: str):
+        if not v.strip():
+            raise ValueError('file path must not be empty or whitespace')
+        if len(v) < 1:
+            raise ValueError('file path must be at least 1 characters')
+        return v.strip()
 
     @field_validator('rating')
     @classmethod
@@ -71,3 +88,4 @@ class BookModel(BaseModel):
         if v <= 0:
             raise ValueError('category_id must be greater than 0')
         return v
+    

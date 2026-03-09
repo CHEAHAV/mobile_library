@@ -16,7 +16,7 @@ class ApiService {
     return 'http://localhost:8000';
   }
 
-  // ✅ fetch all books flat list
+  // fetch all books flat list
   Future<List<Book>> fetchBooks() async {
     final response = await http.get(Uri.parse('$baseUrl/book/all'));
     if (response.statusCode == 200) {
@@ -26,9 +26,9 @@ class ApiService {
     throw Exception('Failed to load books: ${response.statusCode}');
   }
 
-  // ✅ fetch books grouped by category
-  Future<List<Category>> fetchBooksByCategory() async {
-    final response = await http.get(Uri.parse('$baseUrl/book/by-category'));
+  // fetch books grouped by category
+  Future<List<Category>> fetchCategoryWithBook() async {
+    final response = await http.get(Uri.parse('$baseUrl/category/with-books'));
     if (response.statusCode == 200) {
       List jsonResponse = json.decode(response.body);
       return jsonResponse.map((c) => Category.fromJson(c)).toList();
@@ -36,7 +36,7 @@ class ApiService {
     throw Exception('Failed to load categories: ${response.statusCode}');
   }
 
-  // ✅ fetch all categories
+  // fetch all categories
   Future<List<Category>> fetchCategories() async {
     final response = await http.get(Uri.parse('$baseUrl/category/all'));
     if (response.statusCode == 200) {

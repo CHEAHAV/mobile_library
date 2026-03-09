@@ -37,51 +37,24 @@ async def get_books():
     return books
 
 
-@app.get("/book/by-category", tags=["BOOK"])
-async def get_books_by_category():
-    categories = db.query(CATEGORY).all()
-    result = []
-    for cat in categories:
-        books = db.query(BOOK).filter(BOOK.category_id == cat.id).all()
-        result.append({
-            "category_name": cat.category_name,
-            "books": [
-                {
-                    "id": b.id,
-                    "title": b.title,
-                    "description": b.description,
-                    "author_name": b.author_name,
-                    "rating": float(b.rating) if b.rating else 0.0,
-                    "language": b.language,
-                    "page": b.page,
-                    "cover_name": b.cover_name,   # ✅ string filename
-                    "file_name": b.file_name,     # ✅ string filename
-                    "create_at": str(b.create_at) if b.create_at else None,
-                }
-                for b in books
-            ]
-        })
-    return result
-
-
 @app.get("/book/{book_id}/cover", tags=["BOOK"])
 async def get_cover(book_id: int):
     book = db.query(BOOK).filter(BOOK.id == book_id).first()
-    if not book or not book.cover_image:
+    if not book or not book.cover_image is None:
         raise HTTPException(status_code=404, detail="Cover not found!")
     return Response(
         content=bytes(book.cover_image),
-        media_type="image/jpeg"   # ✅ works for both jpg and png
+        media_type="image/jpeg"   # works for both jpg and png
     )
 
 
 @app.get("/book/{book_id}/download", tags=["BOOK"])
 async def download_book(book_id: int):
     book = db.query(BOOK).filter(BOOK.id == book_id).first()
-    if not book or not book.file_path:
+    if not book or not book.file_path is None:
         raise HTTPException(status_code=404, detail="PDF not found!")
     
-    # ✅ no Content-Disposition header — avoids Khmer encoding error
+    # no Content-Disposition header — avoids Khmer encoding error
     return Response(
         content=bytes(book.file_path),
         media_type="application/pdf"
@@ -113,17 +86,17 @@ async def update_book(book_id: int, bookModel: BookModel = Depends(BookModel.for
         raise HTTPException(status_code=404, detail="Book not found!")
     cover_data = await bookModel.cover_image.read()
     pdf_data   = await bookModel.file_path.read()
-    book.title       = bookModel.title
-    book.description = bookModel.description
-    book.author_name = bookModel.author_name
-    book.rating      = bookModel.rating
-    book.language    = bookModel.language
-    book.page        = bookModel.page
-    book.cover_image = cover_data
-    book.file_path   = pdf_data
-    book.cover_name  = bookModel.cover_image.filename
-    book.file_name   = bookModel.file_path.filename
-    book.category_id = bookModel.category_id
+    setattr(book, "title", bookModel.title)
+    setattr(book, "description", bookModel.description)
+    setattr(book, "author_name", bookModel.author_name)
+    setattr(book, "rating", bookModel.rating)
+    setattr(book, "language", bookModel.language)
+    setattr(book, "page", bookModel.page)
+    setattr(book, "cover_image", cover_data)
+    setattr(book, "file_path", pdf_data)
+    setattr(book, "cover_name",bookModel.cover_image.filename)
+    setattr(book, "file_name", bookModel.file_path.filename)
+    setattr(book, "category_id", bookModel.category_id)
     db.commit()
     db.refresh(book)
     return {"message": f"Book id: {book_id} updated successfully!"}
