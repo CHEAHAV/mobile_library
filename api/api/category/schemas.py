@@ -4,7 +4,7 @@ from api.book.schemas import BookRespone
 
 
 class CategoryRespone(BaseModel):
-    id: int
+    id           : int
     category_name: str
 
     model_config = ConfigDict(from_attributes=True)
@@ -13,7 +13,7 @@ class CategoryRespone(BaseModel):
 # includes books list
 class CategoryResponeWithBooks(BaseModel):
     category_name: str
-    books: list[BookRespone] = []
+    books        : list[BookRespone] = []
 
     model_config = ConfigDict(from_attributes=True)
 
@@ -22,7 +22,7 @@ class CategoryModel(BaseModel):
     category_name: str
 
     @classmethod
-    def form(cls, category_name: str = Form(...)):
+    def form(cls, category_name: str = Form(...,description= "Category name", examples= [""])): 
         return cls(category_name=category_name)
 
     @field_validator("category_name")

@@ -5,44 +5,43 @@ from fastapi import File, Form, UploadFile
 
 
 class BookRespone(BaseModel):
-    id: int
-    title: str
-    description: Optional[str] = None
-    author_name: Optional[str] = None
-    rating: float
-    language: Optional[str] = None
-    page: int
-    cover_name: str    # image filename from DB
-    file_name: str     # PDF filename from DB
-    create_at: Optional[datetime] = None
+    id         : int
+    title      : str
+    description: str
+    author_name: str
+    rating     : float
+    language   : str
+    page       : int
+    cover_name : str                        # image filename from DB
+    file_name  : str                        # PDF filename from DB
+    create_at  : Optional[datetime] = None
 
     model_config = ConfigDict(from_attributes=True)
 
 
 class BookModel(BaseModel):
-    title: str
-    description: Optional[str] = None
-    author_name: Optional[str] = None
-    rating: float = 1.0
-    language: Optional[str] = None
-    page: int = 1
-    cover_image: UploadFile   # binary upload
-    file_path: UploadFile     # binary upload
+    title      : str
+    description: str | None = None
+    author_name: str | None = None
+    rating     : float = 1.0
+    language   : str | None = None
+    page       : int = 1
+    cover_image: UploadFile         # binary upload
+    file_path  : UploadFile         # binary upload
     category_id: int
-
 
     @classmethod
     def form(
         cls,
-        title: str = Form(...),
-        description: str = Form(None),
-        author_name: str = Form(None),
-        rating: float = Form(1.0),
-        language: str = Form(None),
-        page: int = Form(1),
-        cover_image: UploadFile = File(...),
-        file_path: UploadFile = File(...),
-        category_id: int = Form(...),
+        title       : str        = Form(..., description= "Title", examples= [""]),
+        description: str         = Form(None,description= "Description", examples= [""]),
+        author_name: str         = Form(None,description= "Author name", examples= [""]),
+        rating      : float      = Form(...,description= "Rating", examples= [""]),
+        language    : str        = Form(None,description= "Language", examples= [""]),
+        page        : int        = Form(...,description= "Page", examples= [""]),
+        cover_image: UploadFile  = File(...,description= "Cover Image", examples= [""]),
+        file_path   : UploadFile = File(...,description= "File PDF", examples= [""]),
+        category_id: int         = Form(...,description= "Category ID", examples= [""]),
     ):
         return cls(
             title=title, description=description, author_name=author_name,

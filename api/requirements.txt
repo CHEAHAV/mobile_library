@@ -9,4 +9,6 @@ email-validator==1.3.0
 psycopg2-binary==2.9.9
 python-multipart
 aiofiles
-bcrypt
+passlib
+bcrypt == 4.0.1
+python-multipart

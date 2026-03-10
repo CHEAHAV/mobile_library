@@ -12,17 +12,17 @@ async def create_book(bookModel: BookModel = Depends(BookModel.form)):
     cover_data = await bookModel.cover_image.read()
     pdf_data   = await bookModel.file_path.read()
     new_book = BOOK(
-        title=bookModel.title,
-        description=bookModel.description,
-        author_name=bookModel.author_name,
-        rating=bookModel.rating,
-        language=bookModel.language,
-        page=bookModel.page,
-        cover_image=cover_data,
-        file_path=pdf_data,
-        cover_name=bookModel.cover_image.filename,
-        file_name=bookModel.file_path.filename,
-        category_id=bookModel.category_id
+        title       = bookModel.title,
+        description = bookModel.description,
+        author_name = bookModel.author_name,
+        rating      = bookModel.rating,
+        language    = bookModel.language,
+        page        = bookModel.page,
+        cover_image = cover_data,
+        file_path   = pdf_data,
+        cover_name  = bookModel.cover_image.filename,
+        file_name   = bookModel.file_path.filename,
+        category_id = bookModel.category_id
     )
     db.add(new_book)
     db.commit()
@@ -99,4 +99,4 @@ async def update_book(book_id: int, bookModel: BookModel = Depends(BookModel.for
     setattr(book, "category_id", bookModel.category_id)
     db.commit()
     db.refresh(book)
-    return {"message": f"Book id: {book_id} updated successfully!"}
+    return {"message": f"Book title: {bookModel.title} updated successfully!"}
