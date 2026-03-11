@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/screens/discover_screen.dart';
+import 'package:frontend/services/api_service.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized(); // required before any async in main
+  await ApiService.init();   // resolve URL once at startup
   runApp(MyApp());
 }
 

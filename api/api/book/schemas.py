@@ -1,8 +1,5 @@
-from datetime import datetime
-from typing import Optional
 from pydantic import BaseModel, field_validator, ConfigDict
 from fastapi import File, Form, UploadFile
-
 
 class BookRespone(BaseModel):
     id         : int
@@ -14,18 +11,14 @@ class BookRespone(BaseModel):
     page       : int
     cover_name : str                        # image filename from DB
     file_name  : str                        # PDF filename from DB
-    create_at  : Optional[datetime] = None
-
-    model_config = ConfigDict(from_attributes=True)
-
 
 class BookModel(BaseModel):
     title      : str
     description: str | None = None
     author_name: str | None = None
-    rating     : float = 1.0
+    rating     : float
     language   : str | None = None
-    page       : int = 1
+    page       : int
     cover_image: UploadFile         # binary upload
     file_path  : UploadFile         # binary upload
     category_id: int

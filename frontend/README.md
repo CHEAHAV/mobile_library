@@ -15,3 +15,12 @@ A few resources to get you started if this is your first Flutter project:
 For help getting started with Flutter development, view the
 [online documentation](https://docs.flutter.dev/), which offers tutorials,
 samples, guidance on mobile development, and a full API reference.
+
+1. flutter clean
+
+2. flutter pub get
+
+3. flutter run
+
+Note : Run Fastapi before run this flutter app because this app connect with fastapi
+- can run with real device or emulator

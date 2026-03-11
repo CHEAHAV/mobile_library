@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_pdfview/flutter_pdfview.dart';
 import 'package:frontend/models/book.dart';
 import 'package:path_provider/path_provider.dart';
@@ -27,7 +28,16 @@ class _PdfViewerScreenState extends State<PdfViewerScreen> {
   @override
   void initState() {
     super.initState();
+    // hide status bar + nav bar immediately
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
     _downloadAndSavePdf();
+  }
+
+  @override
+  void dispose() {
+    // restore system UI when leaving
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
+    super.dispose();
   }
 
   Future<void> _downloadAndSavePdf() async {
@@ -36,7 +46,7 @@ class _PdfViewerScreenState extends State<PdfViewerScreen> {
       if (response.statusCode == 200) {
         final dir = await getApplicationDocumentsDirectory();
         final fileName = Uri.decodeComponent(
-          widget.downloadUrl.split('/').last, // ✅ decode Khmer filename
+          widget.downloadUrl.split('/').last,
         );
         final file = File('${dir.path}/$fileName');
         await file.writeAsBytes(response.bodyBytes);
@@ -61,32 +71,64 @@ class _PdfViewerScreenState extends State<PdfViewerScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(widget.book.title)),
+      backgroundColor: Colors.black,
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
           : _error != null
-          ? Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Icon(Icons.error_outline, color: Colors.red, size: 48),
-                  const SizedBox(height: 16),
-                  Text(_error!, textAlign: TextAlign.center),
-                  const SizedBox(height: 16),
-                  ElevatedButton(
-                    onPressed: () {
-                      setState(() {
-                        _isLoading = true;
-                        _error = null;
-                      });
-                      _downloadAndSavePdf();
-                    },
-                    child: const Text('Retry'),
+              ? Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Icon(Icons.error_outline, color: Colors.red, size: 48),
+                      const SizedBox(height: 16),
+                      Text(_error!, textAlign: TextAlign.center),
+                      const SizedBox(height: 16),
+                      ElevatedButton(
+                        onPressed: () {
+                          setState(() {
+                            _isLoading = true;
+                            _error = null;
+                          });
+                          _downloadAndSavePdf();
+                        },
+                        child: const Text('Retry'),
+                      ),
+                    ],
                   ),
-                ],
-              ),
-            )
-          : PDFView(filePath: _localPath!),
+                )
+              : Stack(
+                  children: [
+                    // PDF fills entire screen
+                    Positioned.fill(
+                      child: PDFView(
+                        filePath: _localPath!,
+                        enableSwipe: true,
+                        swipeHorizontal: true,
+                        autoSpacing: false,
+                        pageFling: true,
+                        fitPolicy: FitPolicy.BOTH, // fit width & height
+                      ),
+                    ),
+
+                    // back button overlay (top-left)
+                    Positioned(
+                      top: 16,
+                      left: 8,
+                      child: SafeArea(
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: Colors.black54,
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: IconButton(
+                            icon: const Icon(Icons.arrow_back, color: Colors.white),
+                            onPressed: () => Navigator.pop(context),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
     );
   }
 }

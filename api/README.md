@@ -9,7 +9,7 @@ This is a FastAPI-based project designed for testing purposes. Follow the steps 
 1. **Clone the Project**
    - Clone the project from this repository:
      ```bash
-     git clone git@gitlab.com:sdok-s-group/fastapitesting.git
+     git clone https://gitlab.com/CHEAHAV/mobile_library.git
      ```
 
 2. **Create .env File**
@@ -21,13 +21,13 @@ This is a FastAPI-based project designed for testing purposes. Follow the steps 
 3. **Create Virtual Environment**
    - Create a virtual environment:
      ```bash
-     python3 -m venv venv
+     python -m venv venv
      ```
 
 4. **Activate Virtual Environment**
    - Activate the virtual environment:
      ```bash
-     source venv/bin/activate
+    venv/Stript/activate
      ```
 
 5. **Install Project Requirements**

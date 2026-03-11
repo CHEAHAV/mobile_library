@@ -19,7 +19,7 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
   @override
   void initState() {
     super.initState();
-    futureCategories = ApiService().fetchCategoryWithBook();
+    futureCategories = CategoryApi().fetchCategoryWithBook();
   }
 
   @override
@@ -89,7 +89,7 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
                             borderRadius: BorderRadius.circular(30),
                             boxShadow: [
                               BoxShadow(
-                                color: Colors.black.withOpacity(0.06),
+                                color: Colors.black.withValues(alpha: 0.2),
                                 blurRadius: 12,
                                 offset: const Offset(0, 2),
                               ),
@@ -170,7 +170,7 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
           color: Colors.white,
           shape: BoxShape.circle,
           boxShadow: [
-            BoxShadow(color: Colors.black.withOpacity(0.07), blurRadius: 8)
+            BoxShadow(color: Colors.black.withValues(alpha: 0.7), blurRadius: 8)
           ],
         ),
         child: IconButton(icon: Icon(icon, size: 20), onPressed: () {}),
@@ -251,11 +251,11 @@ class _BookCard extends StatelessWidget {
             ClipRRect(
               borderRadius: BorderRadius.circular(14),
               child: Image.network(
-                ApiService().getCoverUrl(book.id),
+                BookApi().getCoverUrl(book.id),
                 width: 130,
                 height: 170,
                 fit: BoxFit.cover,
-                errorBuilder: (_, __, ___) => Container(
+                errorBuilder: (_, _, _) => Container(
                   width: 130,
                   height: 170,
                   decoration: BoxDecoration(
