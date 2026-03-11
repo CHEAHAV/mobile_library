@@ -27,7 +27,6 @@ async def create_user(userModel: UserModel):
     except IntegrityError as e:
         db.rollback()
         error = str(e.orig).lower()
-
         if "username" in error:
             raise HTTPException(status_code=400, detail="Username already taken")
         elif "email" in error:
