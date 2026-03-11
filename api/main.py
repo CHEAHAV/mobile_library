@@ -5,6 +5,6 @@ app = FastAPI()
 
 from api.register import *
 
-@app.get("/")
+@app.get("/", tags= [""])
 def root():
     return RedirectResponse(url="/docs")
