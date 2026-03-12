@@ -30,17 +30,21 @@ This is a FastAPI-based project designed for testing purposes. Follow the steps 
     venv/Stript/activate
      ```
 
-5. **Install Project Requirements**
+5. ** install and update pip
+    ```bash
+    python -m pip install --upgrade pip
+    ```
+6. **Install Project Requirements**
    - Install the required dependencies:
      ```bash
      pip install -r requirements.txt
      ```
 
-6. **Run the Project**
+7. **Run the Project**
    - Run the application using Uvicorn:
      ```bash
      uvicorn main:app --reload
-     ```
+
 
 ## Additional Information
 
