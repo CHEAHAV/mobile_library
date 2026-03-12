@@ -2,15 +2,17 @@ from typing import cast
 
 from fastapi import HTTPException, Depends
 from fastapi.responses import Response
+from sqlalchemy.orm import Session
 from api.book.models import BOOK
 from api.book.schemas import BookModel, BookRespone
 from api.category.models import CATEGORY
-from core.db import db
+from core.db import get_db
 from main import app
 from sqlalchemy.exc import IntegrityError
 
+
 @app.post("/book/create", tags=["BOOK"])
-async def create_book(bookModel: BookModel = Depends(BookModel.form)):
+async def create_book(bookModel: BookModel = Depends(BookModel.form), db: Session = Depends(get_db)):
     try:
         cover_data = await bookModel.cover_image.read()
         pdf_data   = await bookModel.file_path.read()
@@ -40,14 +42,15 @@ async def create_book(bookModel: BookModel = Depends(BookModel.form)):
 
 
 @app.get("/book/all", tags=["BOOK"], response_model=list[BookRespone])
-async def get_books():
+async def get_books(db: Session = Depends(get_db)):
     books = db.query(BOOK).all()
     if not books:
         raise HTTPException(status_code=404, detail="No books found!")
     return books
 
+
 @app.get("/book/{book_id}/cover", tags=["BOOK"])
-async def get_cover(book_id: int):
+async def get_cover(book_id: int, db: Session = Depends(get_db)):
     book = db.query(BOOK).filter(BOOK.id == book_id).first()
     if not book or book.cover_image is None:
         raise HTTPException(status_code=404, detail="Cover not found!")
@@ -56,8 +59,9 @@ async def get_cover(book_id: int):
         media_type="image/jpeg"
     )
 
+
 @app.get("/book/{book_id}/download", tags=["BOOK"])
-async def download_book(book_id: int):
+async def download_book(book_id: int, db: Session = Depends(get_db)):
     book = db.query(BOOK).filter(BOOK.id == book_id).first()
     if not book or book.file_path is None:
         raise HTTPException(status_code=404, detail="PDF not found!")
@@ -68,7 +72,7 @@ async def download_book(book_id: int):
 
 
 @app.get("/book/{book_id}", tags=["BOOK"], response_model=BookRespone)
-async def get_book(book_id: int):
+async def get_book(book_id: int, db: Session = Depends(get_db)):
     book = db.query(BOOK).filter(BOOK.id == book_id).first()
     if not book:
         raise HTTPException(status_code=404, detail="Book not found!")
@@ -76,7 +80,7 @@ async def get_book(book_id: int):
 
 
 @app.delete("/book/{book_id}", tags=["BOOK"])
-async def delete_book(book_id: int):
+async def delete_book(book_id: int, db: Session = Depends(get_db)):
     book = db.query(BOOK).filter(BOOK.id == book_id).first()
     if not book:
         raise HTTPException(status_code=404, detail="Book not found!")
@@ -86,7 +90,7 @@ async def delete_book(book_id: int):
 
 
 @app.put("/book/{book_id}", tags=["BOOK"])
-async def update_book(book_id: int, bookModel: BookModel = Depends(BookModel.form)):
+async def update_book(book_id: int, bookModel: BookModel = Depends(BookModel.form), db: Session = Depends(get_db)):
     try:
         book = db.query(BOOK).filter(BOOK.id == book_id).first()
         if not book:
@@ -101,7 +105,7 @@ async def update_book(book_id: int, bookModel: BookModel = Depends(BookModel.for
         setattr(book, "page", bookModel.page)
         setattr(book, "cover_image", cover_data)
         setattr(book, "file_path", pdf_data)
-        setattr(book, "cover_name",bookModel.cover_image.filename)
+        setattr(book, "cover_name", bookModel.cover_image.filename)
         setattr(book, "file_name", bookModel.file_path.filename)
         setattr(book, "category_id", bookModel.category_id)
         db.commit()
