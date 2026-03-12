@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -24,6 +25,13 @@ class _PdfViewerScreenState extends State<PdfViewerScreen> {
   String? _localPath;
   bool _isLoading = true;
   String? _error;
+
+  // PDF controller & state
+  int? pages;
+  int currentPage = 0;
+  bool isReady = false;
+  final Completer<PDFViewController> _controller =
+      Completer<PDFViewController>();
 
   @override
   void initState() {
@@ -73,62 +81,127 @@ class _PdfViewerScreenState extends State<PdfViewerScreen> {
     return Scaffold(
       backgroundColor: Colors.black,
       body: _isLoading
-          ? const Center(child: CircularProgressIndicator())
+          ? const Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  CircularProgressIndicator(color: Colors.white),
+                  SizedBox(height: 16),
+                  Text('Loading PDF...', style: TextStyle(color: Colors.white)),
+                ],
+              ),
+            )
           : _error != null
-              ? Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Icon(Icons.error_outline, color: Colors.red, size: 48),
-                      const SizedBox(height: 16),
-                      Text(_error!, textAlign: TextAlign.center),
-                      const SizedBox(height: 16),
-                      ElevatedButton(
-                        onPressed: () {
-                          setState(() {
-                            _isLoading = true;
-                            _error = null;
-                          });
-                          _downloadAndSavePdf();
-                        },
-                        child: const Text('Retry'),
-                      ),
-                    ],
+          ? Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Icon(Icons.error_outline, color: Colors.red, size: 48),
+                  const SizedBox(height: 16),
+                  Text(
+                    _error!,
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(color: Colors.white),
                   ),
-                )
-              : Stack(
-                  children: [
-                    // PDF fills entire screen
-                    Positioned.fill(
-                      child: PDFView(
-                        filePath: _localPath!,
-                        enableSwipe: true,
-                        swipeHorizontal: true,
-                        autoSpacing: false,
-                        pageFling: true,
-                        fitPolicy: FitPolicy.BOTH, // fit width & height
+                  const SizedBox(height: 16),
+                  ElevatedButton(
+                    onPressed: () {
+                      setState(() {
+                        _isLoading = true;
+                        _error = null;
+                      });
+                      _downloadAndSavePdf();
+                    },
+                    child: const Text('Retry'),
+                  ),
+                ],
+              ),
+            )
+          : Stack(
+              children: [
+                // PDF fills entire screen
+                Positioned.fill(
+                  child: PDFView(
+                    filePath: _localPath!,
+                    enableSwipe: true,
+                    swipeHorizontal: false, // vertical scroll
+                    autoSpacing: false,
+                    pageFling: true,
+                    pageSnap: false,
+                    fitPolicy: FitPolicy.BOTH, // ← fits page to full screen
+                    backgroundColor: Colors.grey.shade900,
+                    onRender: (totalPages) {
+                      setState(() {
+                        pages = totalPages;
+                        isReady = true;
+                      });
+                    },
+                    onError: (error) {
+                      setState(() {
+                        _error = error.toString();
+                      });
+                    },
+                    onPageError: (page, error) {
+                      debugPrint('Page $page error: $error');
+                    },
+                    onViewCreated: (PDFViewController pdfViewController) {
+                      _controller.complete(pdfViewController);
+                    },
+                    onPageChanged: (int? page, int? total) {
+                      setState(() {
+                        currentPage = page ?? 0;
+                      });
+                    },
+                  ),
+                ),
+
+                // back button overlay (top-left)
+                Positioned(
+                  top: 16,
+                  left: 8,
+                  child: SafeArea(
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.black54,
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: IconButton(
+                        icon: const Icon(Icons.arrow_back, color: Colors.white),
+                        onPressed: () => Navigator.pop(context),
                       ),
                     ),
+                  ),
+                ),
 
-                    // back button overlay (top-left)
-                    Positioned(
-                      top: 16,
-                      left: 8,
-                      child: SafeArea(
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: Colors.black54,
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          child: IconButton(
-                            icon: const Icon(Icons.arrow_back, color: Colors.white),
-                            onPressed: () => Navigator.pop(context),
+                // page indicator (bottom-center)
+                if (isReady && pages != null)
+                  Positioned(
+                    bottom: 24,
+                    left: 0,
+                    right: 0,
+                    child: Center(
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 6,
+                        ),
+                        decoration: BoxDecoration(
+                          color: Colors.black54,
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child: Text(
+                          '${currentPage + 1} / $pages',
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 13,
+                            fontWeight: FontWeight.w500,
                           ),
                         ),
                       ),
                     ),
-                  ],
-                ),
+                  ),
+              ],
+            ),
     );
   }
 }

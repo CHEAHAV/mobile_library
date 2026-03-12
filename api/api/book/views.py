@@ -1,3 +1,5 @@
+from typing import cast
+
 from fastapi import HTTPException, Depends
 from fastapi.responses import Response
 from api.book.models import BOOK
@@ -44,27 +46,23 @@ async def get_books():
         raise HTTPException(status_code=404, detail="No books found!")
     return books
 
-
 @app.get("/book/{book_id}/cover", tags=["BOOK"])
 async def get_cover(book_id: int):
     book = db.query(BOOK).filter(BOOK.id == book_id).first()
-    if not book or not book.cover_image is None:
+    if not book or book.cover_image is None:
         raise HTTPException(status_code=404, detail="Cover not found!")
     return Response(
-        content=bytes(book.cover_image),
-        media_type="image/jpeg"   # works for both jpg and png
+        content=cast(bytes, book.cover_image),
+        media_type="image/jpeg"
     )
-
 
 @app.get("/book/{book_id}/download", tags=["BOOK"])
 async def download_book(book_id: int):
     book = db.query(BOOK).filter(BOOK.id == book_id).first()
-    if not book or not book.file_path is None:
+    if not book or book.file_path is None:
         raise HTTPException(status_code=404, detail="PDF not found!")
-    
-    # no Content-Disposition header — avoids Khmer encoding error
     return Response(
-        content=bytes(book.file_path),
+        content=cast(bytes, book.file_path),
         media_type="application/pdf"
     )
 

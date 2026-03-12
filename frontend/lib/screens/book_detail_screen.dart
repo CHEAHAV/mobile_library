@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:frontend/models/book.dart';
 import 'package:frontend/screens/pdf_viewer_screen.dart';
@@ -55,17 +56,20 @@ class BookDetailScreen extends StatelessWidget {
                         ),
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(12),
-                          child: Image.network(
-                            BookApi().getCoverUrl(book.id),
+                          child: CachedNetworkImage(
+                            imageUrl: BookApi().getCoverUrl(book.id),
                             width: 180,
                             height: 250,
                             fit: BoxFit.cover,
-                            errorBuilder: (_, _, _) => Container(
-                              width: 180,
-                              height: 250,
+                            placeholder: (context, url) =>
+                                const CircularProgressIndicator(),
+                            errorWidget: (context, url, error) => Container(
                               color: Colors.grey[800],
-                              child: const Icon(Icons.book,
-                                  size: 60, color: Colors.white54),
+                              child: const Icon(
+                                Icons.book,
+                                size: 60,
+                                color: Colors.white54,
+                              ),
                             ),
                           ),
                         ),
@@ -102,14 +106,23 @@ class BookDetailScreen extends StatelessWidget {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            _statChip(Icons.star, Colors.amber,
-                                book.rating?.toStringAsFixed(1) ?? 'N/A'),
+                            _statChip(
+                              Icons.star,
+                              Colors.amber,
+                              book.rating?.toStringAsFixed(1) ?? 'N/A',
+                            ),
                             const SizedBox(width: 12),
-                            _statChip(Icons.menu_book, Colors.blue,
-                                '${book.page ?? 0} pages'),
+                            _statChip(
+                              Icons.menu_book,
+                              Colors.blue,
+                              '${book.page ?? 0} pages',
+                            ),
                             const SizedBox(width: 12),
-                            _statChip(Icons.language, Colors.green,
-                                book.language ?? 'N/A'),
+                            _statChip(
+                              Icons.language,
+                              Colors.green,
+                              book.language ?? 'N/A',
+                            ),
                           ],
                         ),
                         const SizedBox(height: 20),
@@ -152,10 +165,7 @@ class BookDetailScreen extends StatelessWidget {
                 icon: const Icon(Icons.play_arrow),
                 label: const Text(
                   'Read Now',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                 ),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.blue,
@@ -178,8 +188,10 @@ class BookDetailScreen extends StatelessWidget {
       children: [
         Icon(icon, size: 16, color: color),
         const SizedBox(width: 4),
-        Text(label,
-            style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w500)),
+        Text(
+          label,
+          style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w500),
+        ),
       ],
     );
   }
