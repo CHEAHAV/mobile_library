@@ -1,6 +1,7 @@
 services:
   db:
     image: postgres:17
+    container_name: api-db-1
     restart: unless-stopped
     environment:
       POSTGRES_USER: ${DB_USER}
@@ -18,10 +19,11 @@ services:
 
   pgadmin:
     image: dpage/pgadmin4:8.3
+    container_name: pgadmin4
     restart: unless-stopped
     environment:
-      PGADMIN_DEFAULT_EMAIL: apple@gmail.com
-      PGADMIN_DEFAULT_PASSWORD: apple123
+      PGADMIN_DEFAULT_EMAIL: postgres@gmail.com
+      PGADMIN_DEFAULT_PASSWORD: 123123
     ports:
       - "8080:80"
     depends_on:
@@ -43,6 +45,7 @@ services:
 
   ngrok:
     image: ngrok/ngrok:latest
+    container_name: ngrok
     restart: unless-stopped
     command: http api:8000 --url=timberless-jonah-pedunculate.ngrok-free.dev --log=stdout
     ports:
@@ -54,3 +57,4 @@ services:
 
 volumes:
   postgres_data:
+    name: book_libraries_postgres_data

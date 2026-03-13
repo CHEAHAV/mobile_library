@@ -1,4 +1,5 @@
 from fastapi import Depends, HTTPException
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 from api.category.models import CATEGORY
 from api.category.schemas import CategoryModel, CategoryRespone, CategoryResponeWithBooks
@@ -8,11 +9,16 @@ from main import app
 
 @app.post("/category/create", tags=["CATEGORY"])
 async def create_category(categoryModel: CategoryModel = Depends(CategoryModel.form), db: Session = Depends(get_db)):
-    new_category = CATEGORY(category_name=categoryModel.category_name)
-    db.add(new_category)
-    db.commit()
-    return {"message": f"Category '{categoryModel.category_name}' created successfully!"}
-
+    try:
+        new_category = CATEGORY(category_name=categoryModel.category_name)
+        db.add(new_category)
+        db.commit()
+        return {"message": f"Category '{categoryModel.category_name}' created successfully!"}
+    except IntegrityError as e:
+        db.rollback()
+        error = str(e.orig).lower()
+        if "id" in error:
+            raise HTTPException(status_code=400, detail="ID had already please use another ID...!")
 
 @app.get("/category/all", tags=["CATEGORY"], response_model=list[CategoryRespone])
 async def get_categories(db: Session = Depends(get_db)):
@@ -43,13 +49,19 @@ async def get_category(category_id: int, db: Session = Depends(get_db)):
 
 @app.put("/category/{category_id}", tags=["CATEGORY"])
 async def update_category(category_id: int, categoryModel: CategoryModel = Depends(CategoryModel.form), db: Session = Depends(get_db)):
-    category = db.query(CATEGORY).filter(CATEGORY.id == category_id).first()
-    if not category:
-        raise HTTPException(status_code=404, detail="Category not found!")
-    setattr(category, "category_name", categoryModel.category_name)
-    db.commit()
-    db.refresh(category)
-    return {"message": f"Category id: {category_id} updated successfully!"}
+    try:
+        category = db.query(CATEGORY).filter(CATEGORY.id == category_id).first()
+        if not category:
+            raise HTTPException(status_code=404, detail="Category not found!")
+        setattr(category, "category_name", categoryModel.category_name)
+        db.commit()
+        db.refresh(category)
+        return {"message": f"Category id: {category_id} updated successfully!"}
+    except IntegrityError as e:
+        db.rollback()
+        error = str(e.orig).lower()
+        if "id" in error:
+            raise HTTPException(status_code=400, detail="ID had already please use another ID...!")
 
 
 @app.delete("/category/{category_id}", tags=["CATEGORY"])

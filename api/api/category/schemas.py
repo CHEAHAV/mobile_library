@@ -3,7 +3,7 @@ from fastapi import Form
 from api.book.schemas import BookRespone
 
 class CategoryRespone(BaseModel):
-    id           : int
+    id           : str
     category_name: str
 
 class CategoryResponeWithBooks(BaseModel):
@@ -11,11 +11,16 @@ class CategoryResponeWithBooks(BaseModel):
     books        : list[BookRespone] = []
 
 class CategoryModel(BaseModel):
+    id           : str
     category_name: str
 
     @classmethod
-    def form(cls, category_name: str = Form(...,description= "Category name", examples= [""])): 
-        return cls(category_name=category_name)
+    def form(cls,
+             id            : str = Form(...,description= "ID", examples= [""]),
+             category_name: str  = Form(...,description= "Category name", examples= [""])):
+        return cls(
+            id=id,
+            category_name=category_name)
 
     @field_validator("category_name")
     @classmethod

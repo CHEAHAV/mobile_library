@@ -17,6 +17,7 @@ async def create_book(bookModel: BookModel = Depends(BookModel.form), db: Sessio
         cover_data = await bookModel.cover_image.read()
         pdf_data   = await bookModel.file_path.read()
         new_book = BOOK(
+            id          = bookModel.id,
             title       = bookModel.title,
             description = bookModel.description,
             author_name = bookModel.author_name,
@@ -35,7 +36,9 @@ async def create_book(bookModel: BookModel = Depends(BookModel.form), db: Sessio
     except IntegrityError as e:
         db.rollback()
         error = str(e.orig).lower()
-        if "file_path" in error:
+        if "id" in error:
+            raise HTTPException(status_code=400, detail="ID had already please use another ID...!")
+        elif "file_path" in error:
             raise HTTPException(status_code=400, detail="File path had already please use another file...!")
         elif "cover_name" in error:
             raise HTTPException(status_code=400, detail="Email had already please use another email")
@@ -97,6 +100,8 @@ async def update_book(book_id: int, bookModel: BookModel = Depends(BookModel.for
             raise HTTPException(status_code=404, detail="Book not found!")
         cover_data = await bookModel.cover_image.read()
         pdf_data   = await bookModel.file_path.read()
+        setattr(book, "id", bookModel.id)
+        setattr(book, "title", bookModel.title)
         setattr(book, "title", bookModel.title)
         setattr(book, "description", bookModel.description)
         setattr(book, "author_name", bookModel.author_name)
@@ -114,7 +119,9 @@ async def update_book(book_id: int, bookModel: BookModel = Depends(BookModel.for
     except IntegrityError as e:
         db.rollback()
         error = str(e.orig).lower()
-        if "file_path" in error:
+        if "id" in error:
+            raise HTTPException(status_code=400, detail="ID had already please use another ID...!")
+        elif "file_path" in error:
             raise HTTPException(status_code=400, detail="File path had already please use another file...!")
         elif "cover_name" in error:
             raise HTTPException(status_code=400, detail="Email had already please use another email")

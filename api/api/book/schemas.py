@@ -2,7 +2,7 @@ from pydantic import BaseModel, field_validator, ConfigDict
 from fastapi import File, Form, UploadFile
 
 class BookRespone(BaseModel):
-    id         : int
+    id         : str
     title      : str
     description: str
     author_name: str
@@ -13,6 +13,7 @@ class BookRespone(BaseModel):
     file_name  : str                        # PDF filename from DB
 
 class BookModel(BaseModel):
+    id         : str
     title      : str
     description: str | None = None
     author_name: str | None = None
@@ -26,6 +27,7 @@ class BookModel(BaseModel):
     @classmethod
     def form(
         cls,
+        id          : str        = Form(..., description= "ID", examples= [""]),
         title       : str        = Form(..., description= "Title", examples= [""]),
         description: str         = Form(None,description= "Description", examples= [""]),
         author_name: str         = Form(None,description= "Author name", examples= [""]),
@@ -37,9 +39,16 @@ class BookModel(BaseModel):
         category_id: int         = Form(...,description= "Category ID", examples= [""]),
     ):
         return cls(
-            title=title, description=description, author_name=author_name,
-            rating=rating, language=language, page=page,
-            cover_image=cover_image, file_path=file_path, category_id=category_id,
+            id=id,
+            title=title, 
+            description=description, 
+            author_name=author_name,
+            rating=rating, 
+            language=language, 
+            page=page,
+            cover_image=cover_image, 
+            file_path=file_path, 
+            category_id=category_id,
         )
     
     @field_validator('cover_image')
