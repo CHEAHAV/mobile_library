@@ -22,7 +22,10 @@ class BookModel(BaseModel):
     page       : int
     cover_image: UploadFile         # binary upload
     file_path  : UploadFile         # binary upload
-    category_id: int
+    category_id: str
+
+    model_config = ConfigDict(from_attributes=True)
+
 
     @classmethod
     def form(
@@ -36,7 +39,7 @@ class BookModel(BaseModel):
         page        : int        = Form(...,description= "Page", examples= [""]),
         cover_image: UploadFile  = File(...,description= "Cover Image", examples= [""]),
         file_path   : UploadFile = File(...,description= "File PDF", examples= [""]),
-        category_id: int         = Form(...,description= "Category ID", examples= [""]),
+        category_id: str         = Form(...,description= "Category ID", examples= [""]),
     ):
         return cls(
             id=id,
@@ -50,24 +53,6 @@ class BookModel(BaseModel):
             file_path=file_path, 
             category_id=category_id,
         )
-    
-    @field_validator('cover_image')
-    @classmethod
-    def validate_cover_image(cls, v: str):
-        if not v.strip():
-            raise ValueError('cover image must not be empty or whitespace')
-        if len(v) < 1:
-            raise ValueError('cover image must be at least 1 characters')
-        return v.strip()
-    
-    @field_validator('file_path')
-    @classmethod
-    def validate_file_path(cls, v: str):
-        if not v.strip():
-            raise ValueError('file path must not be empty or whitespace')
-        if len(v) < 1:
-            raise ValueError('file path must be at least 1 characters')
-        return v.strip()
 
     @field_validator('rating')
     @classmethod
@@ -81,12 +66,5 @@ class BookModel(BaseModel):
     def validate_page_count(cls, v: int):
         if v <= 0:
             raise ValueError('Page count must be greater than 0')
-        return v
-
-    @field_validator('category_id')
-    @classmethod
-    def validate_category_id(cls, v: int):
-        if v <= 0:
-            raise ValueError('category_id must be greater than 0')
         return v
     

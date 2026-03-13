@@ -10,7 +10,9 @@ from main import app
 @app.post("/category/create", tags=["CATEGORY"])
 async def create_category(categoryModel: CategoryModel = Depends(CategoryModel.form), db: Session = Depends(get_db)):
     try:
-        new_category = CATEGORY(category_name=categoryModel.category_name)
+        new_category = CATEGORY(
+            id           = categoryModel.id,
+            category_name=categoryModel.category_name)
         db.add(new_category)
         db.commit()
         return {"message": f"Category '{categoryModel.category_name}' created successfully!"}
@@ -53,6 +55,7 @@ async def update_category(category_id: int, categoryModel: CategoryModel = Depen
         category = db.query(CATEGORY).filter(CATEGORY.id == category_id).first()
         if not category:
             raise HTTPException(status_code=404, detail="Category not found!")
+        setattr(category, "id", categoryModel.id)
         setattr(category, "category_name", categoryModel.category_name)
         db.commit()
         db.refresh(category)

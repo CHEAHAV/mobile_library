@@ -42,7 +42,12 @@ async def create_book(bookModel: BookModel = Depends(BookModel.form), db: Sessio
             raise HTTPException(status_code=400, detail="File path had already please use another file...!")
         elif "cover_name" in error:
             raise HTTPException(status_code=400, detail="Email had already please use another email")
-
+        elif "rating"  in error:
+            raise HTTPException(status_code=400, detail="Rating must be between 0 and 5")
+        elif "page"  in error:
+            raise HTTPException(status_code=400, detail="Page count must be greater than 0")
+        elif "category_id" in error:
+            raise HTTPException(status_code=400, detail="Category ID not found")
 
 @app.get("/book/all", tags=["BOOK"], response_model=list[BookRespone])
 async def get_books(db: Session = Depends(get_db)):
@@ -102,7 +107,6 @@ async def update_book(book_id: int, bookModel: BookModel = Depends(BookModel.for
         pdf_data   = await bookModel.file_path.read()
         setattr(book, "id", bookModel.id)
         setattr(book, "title", bookModel.title)
-        setattr(book, "title", bookModel.title)
         setattr(book, "description", bookModel.description)
         setattr(book, "author_name", bookModel.author_name)
         setattr(book, "rating", bookModel.rating)
@@ -125,3 +129,9 @@ async def update_book(book_id: int, bookModel: BookModel = Depends(BookModel.for
             raise HTTPException(status_code=400, detail="File path had already please use another file...!")
         elif "cover_name" in error:
             raise HTTPException(status_code=400, detail="Email had already please use another email")
+        elif "rating"  in error:
+            raise HTTPException(status_code=400, detail="Rating must be between 0 and 5")
+        elif "page"  in error:
+            raise HTTPException(status_code=400, detail="Page count must be greater than 0")
+        elif "category_id" in error:
+            raise HTTPException(status_code=400, detail="Category ID not found")
