@@ -42,7 +42,7 @@ async def get_categories_with_books(db: Session = Depends(get_db)):
 
 
 @app.get("/category/{category_id}", tags=["CATEGORY"], response_model=CategoryRespone)
-async def get_category(category_id: int, db: Session = Depends(get_db)):
+async def get_category(category_id: str, db: Session = Depends(get_db)):
     category = db.query(CATEGORY).filter(CATEGORY.id == category_id).first()
     if not category:
         raise HTTPException(status_code=404, detail="Category not found!")
@@ -50,7 +50,7 @@ async def get_category(category_id: int, db: Session = Depends(get_db)):
 
 
 @app.put("/category/{category_id}", tags=["CATEGORY"])
-async def update_category(category_id: int, categoryModel: CategoryModel = Depends(CategoryModel.form), db: Session = Depends(get_db)):
+async def update_category(category_id: str, categoryModel: CategoryModel = Depends(CategoryModel.form), db: Session = Depends(get_db)):
     try:
         category = db.query(CATEGORY).filter(CATEGORY.id == category_id).first()
         if not category:
@@ -68,7 +68,7 @@ async def update_category(category_id: int, categoryModel: CategoryModel = Depen
 
 
 @app.delete("/category/{category_id}", tags=["CATEGORY"])
-async def delete_category(category_id: int, db: Session = Depends(get_db)):
+async def delete_category(category_id: str, db: Session = Depends(get_db)):
     category = db.query(CATEGORY).filter(CATEGORY.id == category_id).first()
     if not category:
         raise HTTPException(status_code=404, detail="Category not found!")

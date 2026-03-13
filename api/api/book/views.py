@@ -58,7 +58,7 @@ async def get_books(db: Session = Depends(get_db)):
 
 
 @app.get("/book/{book_id}/cover", tags=["BOOK"])
-async def get_cover(book_id: int, db: Session = Depends(get_db)):
+async def get_cover(book_id: str, db: Session = Depends(get_db)):
     book = db.query(BOOK).filter(BOOK.id == book_id).first()
     if not book or book.cover_image is None:
         raise HTTPException(status_code=404, detail="Cover not found!")
@@ -69,7 +69,7 @@ async def get_cover(book_id: int, db: Session = Depends(get_db)):
 
 
 @app.get("/book/{book_id}/download", tags=["BOOK"])
-async def download_book(book_id: int, db: Session = Depends(get_db)):
+async def download_book(book_id: str, db: Session = Depends(get_db)):
     book = db.query(BOOK).filter(BOOK.id == book_id).first()
     if not book or book.file_path is None:
         raise HTTPException(status_code=404, detail="PDF not found!")
@@ -80,7 +80,7 @@ async def download_book(book_id: int, db: Session = Depends(get_db)):
 
 
 @app.get("/book/{book_id}", tags=["BOOK"], response_model=BookRespone)
-async def get_book(book_id: int, db: Session = Depends(get_db)):
+async def get_book(book_id: str, db: Session = Depends(get_db)):
     book = db.query(BOOK).filter(BOOK.id == book_id).first()
     if not book:
         raise HTTPException(status_code=404, detail="Book not found!")
@@ -88,7 +88,7 @@ async def get_book(book_id: int, db: Session = Depends(get_db)):
 
 
 @app.delete("/book/{book_id}", tags=["BOOK"])
-async def delete_book(book_id: int, db: Session = Depends(get_db)):
+async def delete_book(book_id: str, db: Session = Depends(get_db)):
     book = db.query(BOOK).filter(BOOK.id == book_id).first()
     if not book:
         raise HTTPException(status_code=404, detail="Book not found!")
@@ -98,7 +98,7 @@ async def delete_book(book_id: int, db: Session = Depends(get_db)):
 
 
 @app.put("/book/{book_id}", tags=["BOOK"])
-async def update_book(book_id: int, bookModel: BookModel = Depends(BookModel.form), db: Session = Depends(get_db)):
+async def update_book(book_id: str, bookModel: BookModel = Depends(BookModel.form), db: Session = Depends(get_db)):
     try:
         book = db.query(BOOK).filter(BOOK.id == book_id).first()
         if not book:
