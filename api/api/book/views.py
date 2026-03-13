@@ -4,7 +4,7 @@ from fastapi import HTTPException, Depends
 from fastapi.responses import Response
 from sqlalchemy.orm import Session
 from api.book.models import BOOK
-from api.book.schemas import BookModel, BookRespone
+from api.book.schemas import BookModel, BookResponse
 from api.category.models import CATEGORY
 from core.db import get_db
 from main import app
@@ -40,8 +40,12 @@ async def create_book(bookModel: BookModel = Depends(BookModel.form), db: Sessio
             raise HTTPException(status_code=400, detail="ID had already please use another ID...!")
         elif "file_path" in error:
             raise HTTPException(status_code=400, detail="File path had already please use another file...!")
+        elif "cover_image" in error:
+            raise HTTPException(status_code=400, detail="cover image had already please use another cover image...!")
         elif "cover_name" in error:
-            raise HTTPException(status_code=400, detail="Email had already please use another email")
+            raise HTTPException(status_code=400, detail="Cover name had already please use another cover name")
+        elif "file_name" in error:
+            raise HTTPException(status_code=400, detail="File name had already please use another file name")
         elif "rating"  in error:
             raise HTTPException(status_code=400, detail="Rating must be between 0 and 5")
         elif "page"  in error:
@@ -49,7 +53,7 @@ async def create_book(bookModel: BookModel = Depends(BookModel.form), db: Sessio
         elif "category_id" in error:
             raise HTTPException(status_code=400, detail="Category ID not found")
 
-@app.get("/book/all", tags=["BOOK"], response_model=list[BookRespone])
+@app.get("/book/all", tags=["BOOK"], response_model=list[BookResponse])
 async def get_all_books(db: Session = Depends(get_db)):
     books = db.query(BOOK).all()
     if not books:
@@ -79,7 +83,7 @@ async def download_book(book_id: str, db: Session = Depends(get_db)):
     )
 
 
-@app.get("/book/{book_id}", tags=["BOOK"], response_model=BookRespone)
+@app.get("/book/{book_id}", tags=["BOOK"], response_model=BookResponse)
 async def get_book(book_id: str, db: Session = Depends(get_db)):
     book = db.query(BOOK).filter(BOOK.id == book_id).first()
     if not book:
@@ -127,8 +131,12 @@ async def update_book(book_id: str, bookModel: BookModel = Depends(BookModel.for
             raise HTTPException(status_code=400, detail="ID had already please use another ID...!")
         elif "file_path" in error:
             raise HTTPException(status_code=400, detail="File path had already please use another file...!")
+        elif "cover_image" in error:
+            raise HTTPException(status_code=400, detail="Cover image had already please use another cover image")
         elif "cover_name" in error:
-            raise HTTPException(status_code=400, detail="Email had already please use another email")
+            raise HTTPException(status_code=400, detail="Cover name had already please use another cover name")
+        elif "file_name" in error:
+            raise HTTPException(status_code=400, detail="File name had already please use another file name")
         elif "rating"  in error:
             raise HTTPException(status_code=400, detail="Rating must be between 0 and 5")
         elif "page"  in error:

@@ -1,7 +1,7 @@
 from pydantic import BaseModel, field_validator, ConfigDict
 from fastapi import File, Form, UploadFile
 
-class BookRespone(BaseModel):
+class BookResponse(BaseModel):
     id         : str
     title      : str
     description: str
@@ -55,6 +55,22 @@ class BookModel(BaseModel):
             file_path=file_path, 
             category_id=category_id,
         )
+
+    @field_validator('cover_image')
+    @classmethod
+    def validate_cover_image(cls, v: UploadFile):
+        allowed = {'image/jpeg', 'image/png', 'image/svg+xml'}
+        if v.content_type not in allowed:
+            raise ValueError('Cover image must be jpg, png, or svg')
+        return v
+    
+    @field_validator('file_path')
+    @classmethod
+    def validate_file_path(cls, v: UploadFile):
+        allowed = {'application/pdf'}
+        if v.content_type not in allowed:
+            raise ValueError('file path must be pdf')
+        return v
 
     @field_validator('rating')
     @classmethod

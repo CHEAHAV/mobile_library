@@ -1,5 +1,5 @@
 class Book {
-  final int id;
+  final String id;
   final String title;
   final String? description;
   final String? authorName;
@@ -8,7 +8,7 @@ class Book {
   final int? page;
   final String coverName;
   final String fileName;
-  final int? categoryId;
+  final String? categoryId;
 
   Book({
     required this.id,
@@ -20,12 +20,12 @@ class Book {
     this.page,
     required this.coverName,
     required this.fileName,
-    this.categoryId,
+    required this.categoryId,
   });
 
   factory Book.fromJson(Map<String, dynamic> json) {
     return Book(
-      id:          (json['id'] as num).toInt(),
+      id:          json['id'] as String,
       title:       json['title'] as String? ?? '',
       description: json['description'] as String?,
       authorName:  json['author_name'] as String?,
@@ -34,7 +34,7 @@ class Book {
       page:        (json['page'] as num?)?.toInt(),
       coverName:   json['cover_name'] as String? ?? '',
       fileName:    json['file_name'] as String? ?? '',
-      categoryId:  (json['category_id'] as num?)?.toInt(),
+      categoryId:  json['category_id'] as String,
     );
   }
 }

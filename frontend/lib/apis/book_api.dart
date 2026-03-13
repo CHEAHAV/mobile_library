@@ -18,7 +18,7 @@ class BookApi {
   }
 
   // respone cover image
-  String getCoverUrl(int bookId)    => '${ApiService.baseUrl}/book/$bookId/cover';
+  String getCoverUrl(String bookId)    => '${ApiService.baseUrl}/book/$bookId/cover';
   // respone pdf when open to read
-  String getDownloadUrl(int bookId) => '${ApiService.baseUrl}/book/$bookId/download';
+  String getDownloadUrl(String bookId) => '${ApiService.baseUrl}/book/$bookId/download';
 }

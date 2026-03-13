@@ -1,6 +1,6 @@
 from pydantic import BaseModel, field_validator, ConfigDict
 from fastapi import Form
-from api.book.schemas import BookRespone
+from api.book.schemas import BookResponse
 
 class CategoryRespone(BaseModel):
     id           : str
@@ -8,7 +8,7 @@ class CategoryRespone(BaseModel):
 
 class CategoryResponeWithBooks(BaseModel):
     category_name: str
-    books        : list[BookRespone] = []
+    books        : list[BookResponse] = []
 
 class CategoryModel(BaseModel):
     id           : str
