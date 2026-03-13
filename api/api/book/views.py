@@ -50,7 +50,7 @@ async def create_book(bookModel: BookModel = Depends(BookModel.form), db: Sessio
             raise HTTPException(status_code=400, detail="Category ID not found")
 
 @app.get("/book/all", tags=["BOOK"], response_model=list[BookRespone])
-async def get_books(db: Session = Depends(get_db)):
+async def get_all_books(db: Session = Depends(get_db)):
     books = db.query(BOOK).all()
     if not books:
         raise HTTPException(status_code=404, detail="No books found!")

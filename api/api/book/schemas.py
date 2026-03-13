@@ -11,6 +11,8 @@ class BookRespone(BaseModel):
     page       : int
     cover_name : str                        # image filename from DB
     file_name  : str                        # PDF filename from DB
+    category_id: str
+
 
 class BookModel(BaseModel):
     id         : str

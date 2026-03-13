@@ -23,7 +23,7 @@ async def create_category(categoryModel: CategoryModel = Depends(CategoryModel.f
             raise HTTPException(status_code=400, detail="ID had already please use another ID...!")
 
 @app.get("/category/all", tags=["CATEGORY"], response_model=list[CategoryRespone])
-async def get_categories(db: Session = Depends(get_db)):
+async def get_all_categories(db: Session = Depends(get_db)):
     categories = db.query(CATEGORY).all()
     if not categories:
         raise HTTPException(status_code=404, detail="No categories found!")
