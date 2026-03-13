@@ -16,7 +16,7 @@ class BOOK(Base):
     cover_image = Column(LargeBinary, nullable=False)  # binary image
     file_name   = Column(String(255), nullable=False, unique= True)  # PDF filename
     cover_name  = Column(String(255), nullable=False, unique= True)  # image filename
-    category_id = Column(Integer, ForeignKey("tbl_category.id"), nullable=False)
+    category_id = Column(String(64), ForeignKey("tbl_category.id"), nullable=False)
     create_at   = Column(DateTime, server_default=func.now())
 
     category = relationship("CATEGORY", back_populates="books")
