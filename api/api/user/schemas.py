@@ -31,15 +31,6 @@ class UserModel(BaseModel):
             raise HTTPException(status_code=400, detail="Invalid email format!")
         return v.lower().strip()
 
-    @field_validator('password')
-    @classmethod
-    def validate_password(cls, v: str):
-        if not v.strip():
-            raise HTTPException(status_code=400, detail="Password must not be empty!")
-        if len(v) < 6:
-            raise HTTPException(status_code=400, detail="Password must be at least 6 characters!")
-        return v  # ✅ return plain password, let views.py handle hashing
-
     model_config = ConfigDict(
         from_attributes=True,
         json_schema_extra={
