@@ -1,3 +1,4 @@
+import uuid
 from sqlalchemy import Column, DateTime, ForeignKey, Integer, String, Numeric, LargeBinary, func
 from sqlalchemy.orm import relationship
 from core.db import Base
@@ -5,7 +6,8 @@ from core.db import Base
 class BOOK(Base):
     __tablename__ = "tbl_book"
 
-    id          = Column(String(64), primary_key= True, nullable= False)
+    
+    id = Column(String(64), primary_key=True, nullable=False, default=lambda: str(uuid.uuid4()))
     title       = Column(String(100), nullable=False)
     description = Column(String(255))
     author_name = Column(String(100))

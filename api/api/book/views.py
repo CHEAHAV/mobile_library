@@ -16,7 +16,6 @@ async def create_book(bookModel: BookModel = Depends(BookModel.form), db: Sessio
         cover_data = await bookModel.cover_image.read()
         pdf_data   = await bookModel.file_path.read()
         new_book = BOOK(
-            id          = bookModel.id,
             title       = bookModel.title,
             description = bookModel.description,
             author_name = bookModel.author_name,
@@ -106,7 +105,6 @@ async def update_book(book_id: str, bookModel: BookModel = Depends(BookModel.for
             raise HTTPException(status_code=404, detail="Book not found!")
         cover_data = await bookModel.cover_image.read()
         pdf_data   = await bookModel.file_path.read()
-        setattr(book, "id", bookModel.id)
         setattr(book, "title", bookModel.title)
         setattr(book, "description", bookModel.description)
         setattr(book, "author_name", bookModel.author_name)

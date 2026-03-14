@@ -15,7 +15,6 @@ class BookResponse(BaseModel):
 
 
 class BookModel(BaseModel):
-    id         : str
     title      : str
     description: str | None = None
     author_name: str | None = None
@@ -30,7 +29,6 @@ class BookModel(BaseModel):
     @classmethod
     def form(
         cls,
-        id          : str        = Form(..., description= "ID", examples= [""]),
         title       : str        = Form(..., description= "Title", examples= [""]),
         description: str         = Form(None,description= "Description", examples= [""]),
         author_name: str         = Form(None,description= "Author name", examples= [""]),
@@ -42,7 +40,6 @@ class BookModel(BaseModel):
         category_id: str         = Form(...,description= "Category ID", examples= [""]),
     ):
         return cls(
-            id=id,
             title=title, 
             description=description, 
             author_name=author_name,
