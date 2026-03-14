@@ -2,7 +2,7 @@ from fastapi import HTTPException, Depends
 from sqlalchemy.orm import Session
 from api.hasing import Hash
 from api.user.models import USER
-from api.user.schemas import UserModel, UserLogin,UserResponseLogin
+from api.user.schemas import UserModel, UserLogin, UserResponse,UserResponseLogin
 from core.db import get_db
 from main import app
 from sqlalchemy.exc import IntegrityError
@@ -38,7 +38,7 @@ async def create_user(userModel: UserModel = Depends(UserModel.form), db: Sessio
             raise HTTPException(status_code=400, detail=f"Database error: {error}")
 
 
-@app.get("/user/all", tags=["USER"])
+@app.get("/user/all", tags=["USER"], response_model=list[UserResponse])
 async def get_all_users(db: Session = Depends(get_db)):
     users = db.query(USER).all()
     if not users:

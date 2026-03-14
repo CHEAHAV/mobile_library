@@ -1,6 +1,14 @@
 from fastapi import File, Form, HTTPException, UploadFile
 from pydantic import BaseModel, field_validator
 
+
+class UserResponse(BaseModel):
+    id         : int
+    username   : str
+    gender     : str
+    phone      : str
+    email      : str
+    photo_name : str
 class UserResponseLogin(BaseModel):
     username   : str
     gender     : str
