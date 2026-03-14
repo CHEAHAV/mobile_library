@@ -9,8 +9,8 @@ class BookResponse(BaseModel):
     rating     : float
     language   : str
     page       : int
-    cover_name : str                        # image filename from DB
-    file_name  : str                        # PDF filename from DB
+    cover_name : str    # image filename from DB
+    file_name  : str    # PDF filename from DB
     category_id: str
 
 
@@ -22,8 +22,8 @@ class BookModel(BaseModel):
     rating     : float
     language   : str | None = None
     page       : int
-    cover_image: UploadFile         # binary upload
-    file_path  : UploadFile         # binary upload
+    cover_image: UploadFile   # binary upload
+    file_path  : UploadFile   # binary upload
     category_id: str
 
 

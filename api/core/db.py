@@ -19,7 +19,7 @@ def create_engine_with_retry(retries=5, delay=3):
         except Exception as e:
             print(f"DB connection failed ({i+1}/{retries}): {e}")
             time.sleep(delay)
-    raise Exception("❌ Could not connect to the database after retries")
+    raise Exception("Could not connect to the database after retries")
 
 engine = create_engine_with_retry()
 Session = sessionmaker(bind=engine)
