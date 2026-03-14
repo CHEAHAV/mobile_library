@@ -48,7 +48,7 @@ services:
     image: ngrok/ngrok:latest
     container_name: ngrok
     restart: unless-stopped
-    command: http api:8000 --url=timberless-jonah-pedunculate.ngrok-free.dev --log=stdout
+    command: http api:8000 --url=ellsworth-laughterless-mora.ngrok-free.dev --log=stdout
     ports:
       - "4040:4040"
     environment:

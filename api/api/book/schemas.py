@@ -16,10 +16,10 @@ class BookResponse(BaseModel):
 
 class BookModel(BaseModel):
     title      : str
-    description: str | None = None
-    author_name: str | None = None
+    description: str
+    author_name: str
     rating     : float
-    language   : str | None = None
+    language   : str
     page       : int
     cover_image: UploadFile   # binary upload
     file_path  : UploadFile   # binary upload
@@ -29,10 +29,10 @@ class BookModel(BaseModel):
     def form(
         cls,
         title       : str        = Form(..., description= "Title", examples= [""]),
-        description: str         = Form(None,description= "Description", examples= [""]),
-        author_name: str         = Form(None,description= "Author name", examples= [""]),
+        description: str         = Form(...,description= "Description", examples= [""]),
+        author_name: str         = Form(...,description= "Author name", examples= [""]),
         rating      : float      = Form(...,description= "Rating", examples= [""]),
-        language    : str        = Form(None,description= "Language", examples= [""]),
+        language    : str        = Form(...,description= "Language", examples= [""]),
         page        : int        = Form(...,description= "Page", examples= [""]),
         cover_image: UploadFile  = File(...,description= "Cover Image", examples= [""]),
         file_path   : UploadFile = File(...,description= "File PDF", examples= [""]),
