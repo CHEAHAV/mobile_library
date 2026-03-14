@@ -25,7 +25,6 @@ class BookModel(BaseModel):
     file_path  : UploadFile   # binary upload
     category_id: str
 
-
     @classmethod
     def form(
         cls,

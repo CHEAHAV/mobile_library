@@ -9,7 +9,7 @@ from sqlalchemy.exc import IntegrityError
 
 
 @app.post("/user/create", tags=["USER"])
-async def create_user(userModel: UserModel, db: Session = Depends(get_db)):
+async def create_user(userModel: UserModel = Depends(UserModel.form), db: Session = Depends(get_db)):
     try:
         hashed_password = Hash.bcrypt(userModel.password)
         new_user = USER(
@@ -17,7 +17,9 @@ async def create_user(userModel: UserModel, db: Session = Depends(get_db)):
             gender=userModel.gender,
             phone=userModel.phone,
             email=userModel.email,
-            password=hashed_password
+            password=hashed_password,
+            photo_image=await userModel.photo_image.read(),
+            photo_name=userModel.photo_image.filename,
         )
         db.add(new_user)
         db.commit()
@@ -55,7 +57,7 @@ async def login(userLogin: UserLogin, db: Session = Depends(get_db)):
 
 
 @app.put("/user/{user_id}", tags=["USER"])
-async def update_user(user_id: int, userModel: UserModel, db: Session = Depends(get_db)):
+async def update_user(user_id: int, userModel: UserModel = Depends(UserModel.form), db: Session = Depends(get_db)):
     try:
         user = db.query(USER).filter(USER.id == user_id).first()
         if not user:
@@ -66,6 +68,8 @@ async def update_user(user_id: int, userModel: UserModel, db: Session = Depends(
         setattr(user, "phone", userModel.phone)
         setattr(user, "email", userModel.email)
         setattr(user, "password", hashed_password)
+        setattr(user, "photo_image", await userModel.photo_image.read())
+        setattr(user, "photo_name", userModel.photo_image.filename)
         db.commit()
         db.refresh(user)
         return {"message": f"User '{userModel.username}' updated successfully!"}

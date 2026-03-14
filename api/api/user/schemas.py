@@ -1,11 +1,12 @@
-from fastapi import HTTPException
-from pydantic import BaseModel, ConfigDict, field_validator
+from fastapi import Form, HTTPException, UploadFile
+from pydantic import BaseModel, field_validator
 
 class UserResponseLogin(BaseModel):
-    username: str
-    gender  : str
-    phone   : str
-    email   : str
+    username   : str
+    gender     : str
+    phone      : str
+    email      : str
+    photo_name : str
 
 
 class UserModel(BaseModel):
@@ -14,6 +15,27 @@ class UserModel(BaseModel):
     phone   : str
     email   : str
     password: str
+    photo_image: UploadFile
+
+    @classmethod
+    def form(
+        cls,
+        username: str = Form(..., description="Username", example=[""]),
+        gender  : str = Form(None, description="Gender", example=[""]),
+        phone   : str = Form(..., description="Phone", example=[""]),
+        email   : str = Form(..., description="Email", example=[""]),
+        password: str = Form(..., description="Password", example=[""]),
+        photo_image: UploadFile = Form(..., description="Photo Image", example=[""])
+    ):
+        return cls(
+            username=username,
+            gender=gender,
+            phone=phone,
+            email=email,
+            password=password,
+            photo_image=photo_image
+        )
+
 
     @field_validator('username')
     @classmethod
@@ -24,36 +46,35 @@ class UserModel(BaseModel):
             raise HTTPException(status_code=400, detail="Username must be at least 3 characters!")
         return v.strip()
 
+
     @field_validator('email')
     @classmethod
     def validate_email(cls, v: str):
         if '@' not in v or '.' not in v.split('@')[-1]:
             raise HTTPException(status_code=400, detail="Invalid email format!")
         return v.lower().strip()
+    
 
-    model_config = ConfigDict(
-        from_attributes=True,
-        json_schema_extra={
-            "example": {
-                "username": "snoopy",
-                "gender"  : "male",
-                "phone"   : "09878654321",
-                "email"   : "snoopy123@gmail.com",
-                "password": "123123123",
-            }
-        }
-    )
+    @field_validator('photo_image')
+    @classmethod
+    def validate_photo_image(cls, v: UploadFile):
+        allowed = {'image/jpeg', 'image/png', 'image/svg+xml'}
+        if v.content_type not in allowed:
+            raise HTTPException(status_code=404, detail="Photo image must be jpg, png, or svg")
+        return v
 
 
 class UserLogin(BaseModel):
     username: str
     password: str
 
-    model_config = ConfigDict(
-        json_schema_extra={
-            "example": {
-                "username": "snoopy",
-                "password": "123123123",
-            }
-        }
-    )
+    @classmethod
+    def form(
+        cls,
+        username: str = Form(..., description="Username", example=[""]),
+        password: str = Form(..., description="Password", example=[""])
+    ):
+        return cls(
+            username=username,
+            password=password
+        )
