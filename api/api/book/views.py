@@ -118,7 +118,7 @@ async def update_book(book_id: str, bookModel: BookModel = Depends(BookModel.for
         setattr(book, "category_id", bookModel.category_id)
         db.commit()
         db.refresh(book)
-        return {"message": f"Book title: {bookModel.title} updated successfully!"}
+        return {"message": f"Book ID: {book_id} updated successfully!"}
     except IntegrityError as e:
         db.rollback()
         error = str(e.orig).lower()
