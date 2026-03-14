@@ -49,10 +49,10 @@ async def get_all_users(db: Session = Depends(get_db)):
 @app.get("/user/{user_id}/user", tags=["USER"])
 async def get_user_photo_image(user_id: str, db: Session = Depends(get_db)):
     user = db.query(USER).filter(USER.id == user_id).first()
-    if not USER or USER.user_image is None:
-        raise HTTPException(status_code=404, detail="user not found!")
+    if not user or user.photo_image is None:
+        raise HTTPException(status_code=404, detail="User not found!")
     return Response(
-        content=cast(bytes, USER.photo_image),
+        content=cast(bytes, user.photo_image),
         media_type="image/jpeg"
     )
 
