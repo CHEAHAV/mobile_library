@@ -1,5 +1,5 @@
 from pydantic import BaseModel, field_validator, ConfigDict
-from fastapi import Form
+from fastapi import Form, HTTPException
 from api.book.schemas import BookResponse
 from core.db import get_db
 
@@ -27,5 +27,5 @@ class CategoryModel(BaseModel):
     @classmethod
     def validate_category_name(cls, v: str):
         if len(v.strip()) < 3:
-            raise ValueError("Category name must be at least 3 characters")
+            raise HTTPException(status_code=404, detail="Category name must be 3 characters or more!")
         return v.strip()

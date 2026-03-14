@@ -33,7 +33,7 @@ async def create_user(userModel: UserModel, db: Session = Depends(get_db)):
         elif "phone" in error:
             raise HTTPException(status_code=400, detail="Phone already registered")
         else:
-            raise HTTPException(status_code=400, detail="User already exists")
+            raise HTTPException(status_code=400, detail=f"Database error: {error}")
 
 
 @app.get("/user/get-all-user", tags=["USER"])
@@ -69,7 +69,7 @@ async def update_user(user_id: int, userModel: UserModel, db: Session = Depends(
         elif "phone" in error:
             raise HTTPException(status_code=400, detail="Phone already registered")
         else:
-            raise HTTPException(status_code=400, detail="User already exists")
+            raise HTTPException(status_code=400, detail=f"Database error: {error}")
 
 
 @app.delete("/user/{user_id}", tags=["USER"])

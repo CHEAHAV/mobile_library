@@ -1,5 +1,5 @@
 from pydantic import BaseModel, field_validator, ConfigDict
-from fastapi import File, Form, UploadFile
+from fastapi import File, Form, HTTPException, UploadFile
 
 class BookResponse(BaseModel):
     id         : str
@@ -61,7 +61,7 @@ class BookModel(BaseModel):
     def validate_cover_image(cls, v: UploadFile):
         allowed = {'image/jpeg', 'image/png', 'image/svg+xml'}
         if v.content_type not in allowed:
-            raise ValueError('Cover image must be jpg, png, or svg')
+            raise HTTPException(status_code=404, detail="Cover image must be jpg, png, or svg")
         return v
     
     @field_validator('file_path')
@@ -69,20 +69,20 @@ class BookModel(BaseModel):
     def validate_file_path(cls, v: UploadFile):
         allowed = {'application/pdf'}
         if v.content_type not in allowed:
-            raise ValueError('file path must be pdf')
+            raise HTTPException(status_code=404, detail="File path must be pdf")
         return v
 
     @field_validator('rating')
     @classmethod
     def validate_rating(cls, v: float):
         if not 0 <= v <= 5:
-            raise ValueError('Rating must be between 0 and 5')
+            raise HTTPException(status_code=404, detail="Rating must be between 0 and 5")
         return v
 
     @field_validator('page')
     @classmethod
     def validate_page_count(cls, v: int):
         if v <= 0:
-            raise ValueError('Page count must be greater than 0')
+            raise HTTPException(status_code=404, detail="Page count must be greater than 0")
         return v
     

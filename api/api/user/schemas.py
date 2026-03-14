@@ -1,3 +1,4 @@
+from fastapi import HTTPException
 from pydantic import BaseModel, ConfigDict, field_validator
 import bcrypt
 
@@ -22,25 +23,25 @@ class UserModel(BaseModel):
     @classmethod
     def validate_username(cls, v: str):
         if not v.strip():
-            raise ValueError('Username must not be empty or whitespace')
+            raise HTTPException(status_code=404, detail="Username must not be empty")
         if len(v) < 3:
-            raise ValueError('Username must be at least 3 characters')
+            raise HTTPException(status_code=404, detail="Username must be at least 3 characters")
         return v.strip()
 
     @field_validator('email')
     @classmethod
     def validate_email(cls, v: str):
         if '@' not in v or '.' not in v.split('@')[-1]:
-            raise ValueError('Invalid email format')
+            raise HTTPException(status_code=404, detail="Invalid email format")
         return v.lower().strip()
 
     @field_validator('password')
     @classmethod
     def hash_password(cls, v: str):
         if not v.strip():
-            raise ValueError('Password must not be empty')
+            raise HTTPException(status_code=404, detail="Password must not be empty")
         if len(v) < 6:
-            raise ValueError('Password must be at least 8 characters')
+            raise HTTPException(status_code=404, detail="Password must be at least 6 characters")
         hashed = bcrypt.hashpw(v.encode('utf-8'), bcrypt.gensalt())
         return hashed.decode('utf-8')
     
