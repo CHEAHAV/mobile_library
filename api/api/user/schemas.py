@@ -20,11 +20,11 @@ class UserModel(BaseModel):
     @classmethod
     def form(
         cls,
-        username: str = Form(..., description="Username", example=[""]),
-        gender  : str = Form(None, description="Gender", example=[""]),
-        phone   : str = Form(..., description="Phone", example=[""]),
-        email   : str = Form(..., description="Email", example=[""]),
-        password: str = Form(..., description="Password", example=[""]),
+        username: str = Form(..., description="Username", examples=[""]),
+        gender  : str = Form(None, description="Gender", examples=[""]),
+        phone   : str = Form(..., description="Phone", examples=[""]),
+        email   : str = Form(..., description="Email", examples=[""]),
+        password: str = Form(..., description="Password", examples=[""]),
         photo_image: UploadFile = File(..., description="Photo Image")
     ):
         return cls(
