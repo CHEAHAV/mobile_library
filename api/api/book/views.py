@@ -37,10 +37,10 @@ async def create_book(bookModel: BookModel = Depends(BookModel.form), db: Sessio
         error = str(e.orig).lower()
         if "id" in error:
             raise HTTPException(status_code=400, detail="ID had already please use another ID...!")
-        elif "file_path" in error:
-            raise HTTPException(status_code=400, detail="File path had already please use another file...!")
         elif "cover_image" in error:
             raise HTTPException(status_code=400, detail="cover image had already please use another cover image...!")
+        elif "file_path" in error:
+            raise HTTPException(status_code=400, detail="File path had already please use another file...!")
         elif "rating"  in error:
             raise HTTPException(status_code=400, detail="Rating must be between 0 and 5")
         elif "page"  in error:
@@ -126,10 +126,10 @@ async def update_book(book_id: str, bookModel: BookModel = Depends(BookModel.for
         error = str(e.orig).lower()
         if "id" in error:
             raise HTTPException(status_code=400, detail="ID had already please use another ID...!")
-        elif "file_path" in error:
-            raise HTTPException(status_code=400, detail="File path had already please use another file...!")
         elif "cover_image" in error:
             raise HTTPException(status_code=400, detail="Cover image had already please use another cover image")
+        elif "file_path" in error:
+            raise HTTPException(status_code=400, detail="File path had already please use another file...!")
         elif "rating"  in error:
             raise HTTPException(status_code=400, detail="Rating must be between 0 and 5")
         elif "page"  in error:
