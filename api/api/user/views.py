@@ -1,4 +1,4 @@
-from fastapi import HTTPException, Depends
+from fastapi import HTTPException, Depends, Response
 from sqlalchemy.orm import Session
 from api.hasing import Hash
 from api.user.models import USER
@@ -6,6 +6,7 @@ from api.user.schemas import UserModel, UserLogin, UserResponse,UserResponseLogi
 from core.db import get_db
 from main import app
 from sqlalchemy.exc import IntegrityError
+from typing import cast
 
 
 @app.post("/user/create", tags=["USER"])
@@ -44,6 +45,16 @@ async def get_all_users(db: Session = Depends(get_db)):
     if not users:
         raise HTTPException(status_code=404, detail="No users found!")
     return users
+
+@app.get("/user/{user_id}/user", tags=["USER"])
+async def get_user(user_id: str, db: Session = Depends(get_db)):
+    user = db.query(USER).filter(USER.id == user_id).first()
+    if not USER or USER.user_image is None:
+        raise HTTPException(status_code=404, detail="user not found!")
+    return Response(
+        content=cast(bytes, USER.photo_image),
+        media_type="image/jpeg"
+    )
 
 
 @app.post("/user/login", tags=["USER"], response_model=UserResponseLogin)

@@ -1,5 +1,4 @@
 from typing import cast
-
 from fastapi import HTTPException, Depends
 from fastapi.responses import Response
 from sqlalchemy.orm import Session
