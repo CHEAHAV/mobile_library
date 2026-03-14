@@ -48,7 +48,7 @@ class UserModel(BaseModel):
                 "gender"  : "male",
                 "phone"   : "09878654321",
                 "email"   : "snoopy123@gmail.com",
-                "password": "123123",
+                "password": "123123123",
             }
         }
     )
@@ -62,7 +62,7 @@ class UserLogin(BaseModel):
         json_schema_extra={
             "example": {
                 "username": "snoopy",
-                "password": "123123",
+                "password": "123123123",
             }
         }
     )
