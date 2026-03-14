@@ -7,9 +7,11 @@ class CategoryRespone(BaseModel):
     id           : str
     category_name: str
 
+
 class CategoryResponeWithBooks(BaseModel):
     category_name: str
     books        : list[BookResponse] = []
+
 
 class CategoryModel(BaseModel):
     id           : str

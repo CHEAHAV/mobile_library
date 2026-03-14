@@ -26,8 +26,6 @@ class BookModel(BaseModel):
     file_path  : UploadFile         # binary upload
     category_id: str
 
-    model_config = ConfigDict(from_attributes=True)
-
 
     @classmethod
     def form(

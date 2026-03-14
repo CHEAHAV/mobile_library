@@ -56,6 +56,16 @@ async def get_category(category_id: str, db: Session = Depends(get_db)):
     return category
 
 
+@app.get("/category/id/with-books/{category_id}", tags=["CATEGORY"], response_model=CategoryResponeWithBooks)
+async def get_category_id_with_books(category_id: str, db: Session = Depends(get_db)):
+    category = db.query(CATEGORY).filter(CATEGORY.id == category_id).first()
+    if not category:
+        raise HTTPException(status_code=404, detail="Category not found!")
+    if not category.books:
+        raise HTTPException(status_code=404, detail="No books in this category!")
+    return category
+
+
 @app.put("/category/{category_id}", tags=["CATEGORY"])
 async def update_category(category_id: str, categoryModel: CategoryModel = Depends(CategoryModel.form), db: Session = Depends(get_db)):
     try:
