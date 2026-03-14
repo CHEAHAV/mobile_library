@@ -51,3 +51,38 @@ This is a FastAPI-based project designed for testing purposes. Follow the steps 
 - Ensure Python 3.8 or higher is installed on your system.
 - Make sure the `.env` file contains the correct configurations to avoid runtime issues.
 - For further assistance, please contact the project maintainers.
+
+## If you want to use Docker you can follow the command
+* open docker 
+
+* use command in terminal
+
+- wsl install
+
+- docker compose up --build
+
+- docker compose up
+
+## web backend
+
+http://127.0.0.1:8000/docs
+
+## web database pgAmin
+
+http://127.0.0.1:8080
+
+gmail : check in docker-compose.yml, defaul : postgres@gmail.com
+password : check in docker-compose.yml, defaul : 123123
+
+## Click New server
+## General
+Name : db_libraries
+
+## Connection
+Host name/address : db
+Maintenance database : postgres
+Username : postgres
+password : check in docker-compose.yml, defaul : 123123
+
+
+
