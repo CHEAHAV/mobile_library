@@ -1,6 +1,7 @@
 from pydantic import BaseModel, field_validator, ConfigDict
 from fastapi import Form
 from api.book.schemas import BookResponse
+from core.db import get_db
 
 class CategoryRespone(BaseModel):
     id           : str

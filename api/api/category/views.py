@@ -20,9 +20,13 @@ async def create_category(categoryModel: CategoryModel = Depends(CategoryModel.f
         db.rollback()
         error = str(e.orig).lower()
         if "id" in error:
-            raise HTTPException(status_code=400, detail="ID had already please use another ID...!")
+            raise HTTPException(status_code=400, detail="ID already exists, please use another ID!")
         elif "category_name" in error:
-            raise HTTPException(status_code=400, detail="Category name must me 3 characters or more...!")
+            raise HTTPException(status_code=400, detail="Category name must be 3 characters or more!")
+        elif "category_name" in error:
+            raise HTTPException(status_code=400, detail="Category name already exists, please use another category name!")
+        else:
+            raise HTTPException(status_code=400, detail=f"Database error: {error}") 
 
 
 @app.get("/category/all", tags=["CATEGORY"], response_model=list[CategoryRespone])
@@ -70,6 +74,8 @@ async def update_category(category_id: str, categoryModel: CategoryModel = Depen
             raise HTTPException(status_code=400, detail="ID had already please use another ID...!")
         elif "category_name" in error:
             raise HTTPException(status_code=400, detail="Category name must me 3 characters or more...!")
+        else:
+            raise HTTPException(status_code=400, detail=f"Database error: {error}")
 
 
 @app.delete("/category/{category_id}", tags=["CATEGORY"])

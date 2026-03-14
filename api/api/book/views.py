@@ -41,16 +41,14 @@ async def create_book(bookModel: BookModel = Depends(BookModel.form), db: Sessio
             raise HTTPException(status_code=400, detail="File path had already please use another file...!")
         elif "cover_image" in error:
             raise HTTPException(status_code=400, detail="cover image had already please use another cover image...!")
-        elif "cover_name" in error:
-            raise HTTPException(status_code=400, detail="Cover name had already please use another cover name")
-        elif "file_name" in error:
-            raise HTTPException(status_code=400, detail="File name had already please use another file name")
         elif "rating"  in error:
             raise HTTPException(status_code=400, detail="Rating must be between 0 and 5")
         elif "page"  in error:
             raise HTTPException(status_code=400, detail="Page count must be greater than 0")
         elif "category_id" in error:
             raise HTTPException(status_code=400, detail="Category ID not found")
+        else:
+            raise HTTPException(status_code=400, detail=f"Database error: {error}")
 
 @app.get("/book/all", tags=["BOOK"], response_model=list[BookResponse])
 async def get_all_books(db: Session = Depends(get_db)):
@@ -132,13 +130,11 @@ async def update_book(book_id: str, bookModel: BookModel = Depends(BookModel.for
             raise HTTPException(status_code=400, detail="File path had already please use another file...!")
         elif "cover_image" in error:
             raise HTTPException(status_code=400, detail="Cover image had already please use another cover image")
-        elif "cover_name" in error:
-            raise HTTPException(status_code=400, detail="Cover name had already please use another cover name")
-        elif "file_name" in error:
-            raise HTTPException(status_code=400, detail="File name had already please use another file name")
         elif "rating"  in error:
             raise HTTPException(status_code=400, detail="Rating must be between 0 and 5")
         elif "page"  in error:
             raise HTTPException(status_code=400, detail="Page count must be greater than 0")
         elif "category_id" in error:
             raise HTTPException(status_code=400, detail="Category ID not found")
+        else:
+            raise HTTPException(status_code=400, detail=f"Database error: {error}")
