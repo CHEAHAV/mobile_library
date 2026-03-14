@@ -5,7 +5,6 @@ from fastapi.responses import Response
 from sqlalchemy.orm import Session
 from api.book.models import BOOK
 from api.book.schemas import BookModel, BookResponse
-from api.category.models import CATEGORY
 from core.db import get_db
 from main import app
 from sqlalchemy.exc import IntegrityError
