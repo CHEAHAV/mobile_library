@@ -10,6 +10,7 @@ class UserResponse(BaseModel):
     email      : str
     photo_name : str
 class UserResponseLogin(BaseModel):
+    id         : int
     username   : str
     gender     : str
     phone      : str
@@ -66,9 +67,22 @@ class UserModel(BaseModel):
     @field_validator('photo_image')
     @classmethod
     def validate_photo_image(cls, v: UploadFile):
-        allowed = {'image/jpeg', 'image/png', 'image/svg+xml'}
-        if v.content_type not in allowed:
-            raise HTTPException(status_code=404, detail="Photo image must be jpg, png, or svg")
+        # Allowed MIME types
+        allowed_types = {'image/jpeg', 'image/png', 'image/svg+xml'}
+ 
+        # Fallback: check by file extension if MIME is missing/octet-stream
+        allowed_exts = {'.jpg', '.jpeg', '.png', '.svg'}
+ 
+        content_type = (v.content_type or '').lower()
+        filename     = (v.filename     or '').lower()
+        ext          = '.' + filename.rsplit('.', 1)[-1] if '.' in filename else ''
+ 
+        # Accept if MIME type matches OR extension matches
+        if content_type not in allowed_types and ext not in allowed_exts:
+            raise HTTPException(
+                status_code=400,
+                detail="Photo image must be jpg, png, or svg",
+            )
         return v
 
 

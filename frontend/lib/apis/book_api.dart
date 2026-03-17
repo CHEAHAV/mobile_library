@@ -4,21 +4,28 @@ import 'package:frontend/services/api_service.dart';
 import 'package:http/http.dart' as http;
 
 class BookApi {
-  // response all book from api
+  // ── singleton ─────────────────────────────────────────────────────────────
+  BookApi._();
+  static final BookApi instance = BookApi._();
+
+  // ── GET /book/all ─────────────────────────────────────────────────────────
   Future<List<Book>> fetchBooks() async {
-    final response = await http.get(
-      Uri.parse('${ApiService.baseUrl}/book/all'),
-      headers: ApiService.headers,
-    );
-    if (response.statusCode == 200) {
-      List jsonResponse = json.decode(response.body);
-      return jsonResponse.map((b) => Book.fromJson(b)).toList();
+    try {
+      final response = await http.get(
+        Uri.parse('${ApiService.baseUrl}/book/all'),
+        headers: ApiService.headers,
+      );
+      if (response.statusCode == 200) {
+        final List json = jsonDecode(response.body);
+        return json.map((b) => Book.fromJson(b)).toList();
+      }
+      throw Exception('Failed to load books: ${response.statusCode}');
+    } catch (e) {
+      throw Exception('fetchBooks error: $e');
     }
-    throw Exception('Failed to load books: ${response.statusCode}');
   }
 
-  // respone cover image
   String getCoverUrl(String bookId)    => '${ApiService.baseUrl}/book/$bookId/cover';
-  // respone pdf when open to read
   String getDownloadUrl(String bookId) => '${ApiService.baseUrl}/book/$bookId/download';
+  Map<String, String> get imageHeaders => ApiService.headers;
 }

@@ -10,6 +10,6 @@ class LogoutPage extends StatefulWidget {
 class _LogoutPageState extends State<LogoutPage> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold();
+    return Scaffold(body: Text("data"));
   }
 }

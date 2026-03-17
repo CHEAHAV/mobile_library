@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 class Book {
   final String id;
   final String title;
@@ -37,4 +39,19 @@ class Book {
       categoryId:  json['category_id'] as String,
     );
   }
+}
+
+// ── Borrowed book model (replace with real API model) ─────────────────────────
+class BorrowedBook {
+  final String title;
+  final String dueDate;
+  final bool   isUrgent;
+  final Color  coverColor;
+
+  const BorrowedBook({
+    required this.title,
+    required this.dueDate,
+    required this.isUrgent,
+    required this.coverColor,
+  });
 }

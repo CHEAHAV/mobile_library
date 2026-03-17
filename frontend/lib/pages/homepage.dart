@@ -1,25 +1,32 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/apis/book_api.dart';
+import 'package:frontend/apis/category_api.dart';
+import 'package:frontend/components/favorite_button.dart';
 import 'package:frontend/models/category.dart';
 import 'package:frontend/models/book.dart';
-import 'package:frontend/services/api_service.dart';
 import 'package:frontend/screens/book_detail_screen.dart';
 
-class DiscoverScreen extends StatefulWidget {
-  const DiscoverScreen({super.key});
+class HomePage extends StatefulWidget {
+  const HomePage({super.key});
 
   @override
-  State<DiscoverScreen> createState() => _DiscoverScreenState();
+  State<HomePage> createState() => _HomePageState();
 }
 
-class _DiscoverScreenState extends State<DiscoverScreen> {
+class _HomePageState extends State<HomePage> {
   late Future<List<Category>> futureCategories;
-  final TextEditingController _searchController = TextEditingController();
-  int _currentIndex = 0;
+  final _searchController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
-    futureCategories = CategoryApi().fetchCategoryWithBook();
+    futureCategories = CategoryApi.instance.fetchCategoryWithBook();
+  }
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
   }
 
   @override
@@ -42,13 +49,13 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
 
             return CustomScrollView(
               slivers: [
-                // ── Header ──────────────────────────────────
                 SliverToBoxAdapter(
                   child: Padding(
                     padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        // ── Header row ──────────────────────────────────────
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
@@ -82,14 +89,15 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
                           ],
                         ),
                         const SizedBox(height: 18),
-                        // ── Search ────────────────────────────
+
+                        // ── Search bar ──────────────────────────────────────
                         Container(
                           decoration: BoxDecoration(
                             color: Colors.white,
                             borderRadius: BorderRadius.circular(30),
                             boxShadow: [
                               BoxShadow(
-                                color: Colors.black.withValues(alpha: 0.2),
+                                color: Colors.black.withOpacity(0.08),
                                 blurRadius: 12,
                                 offset: const Offset(0, 2),
                               ),
@@ -117,13 +125,11 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
                   ),
                 ),
 
-                // ── Category sections ────────────────────────
+                // ── Category sections ─────────────────────────────────────
                 SliverList(
                   delegate: SliverChildBuilderDelegate(
-                    (context, index) {
-                      final category = categories[index];
-                      return _CategorySection(category: category);
-                    },
+                    (context, index) =>
+                        _CategorySection(category: categories[index]),
                     childCount: categories.length,
                   ),
                 ),
@@ -134,34 +140,6 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
           },
         ),
       ),
-
-      // ── Bottom nav ───────────────────────────────────────
-      bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        selectedItemColor: Colors.blue,
-        unselectedItemColor: Colors.grey,
-        selectedFontSize: 10,
-        unselectedFontSize: 10,
-        currentIndex: _currentIndex,
-        onTap: (i) => setState(() => _currentIndex = i),
-        items: const [
-          BottomNavigationBarItem(
-              icon: Icon(Icons.home_outlined),
-              activeIcon: Icon(Icons.home),
-              label: 'HOME'),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.menu_book_outlined),
-              activeIcon: Icon(Icons.menu_book),
-              label: 'LIBRARY'),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.search),
-              label: 'SEARCH'),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.person_outline),
-              activeIcon: Icon(Icons.person),
-              label: 'PROFILE'),
-        ],
-      ),
     );
   }
 
@@ -170,14 +148,20 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
           color: Colors.white,
           shape: BoxShape.circle,
           boxShadow: [
-            BoxShadow(color: Colors.black.withValues(alpha: 0.7), blurRadius: 8)
+            BoxShadow(
+              color: Colors.black.withOpacity(0.08),
+              blurRadius: 8,
+            ),
           ],
         ),
-        child: IconButton(icon: Icon(icon, size: 20), onPressed: () {}),
+        child: IconButton(
+          icon: Icon(icon, size: 20),
+          onPressed: () {},
+        ),
       );
 }
 
-// ── Category row widget ─────────────────────────────────────
+// ── Category section ──────────────────────────────────────────────────────────
 class _CategorySection extends StatelessWidget {
   final Category category;
   const _CategorySection({required this.category});
@@ -187,6 +171,7 @@ class _CategorySection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        // Section header
         Padding(
           padding: const EdgeInsets.fromLTRB(20, 20, 20, 12),
           child: Row(
@@ -212,16 +197,15 @@ class _CategorySection extends StatelessWidget {
             ],
           ),
         ),
+
+        // Horizontal book list
         SizedBox(
-          height: 230,
+          height: 240,
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
             padding: const EdgeInsets.symmetric(horizontal: 16),
             itemCount: category.books.length,
-            itemBuilder: (context, i) {
-              final book = category.books[i];
-              return _BookCard(book: book);
-            },
+            itemBuilder: (_, i) => _BookCard(book: category.books[i]),
           ),
         ),
       ],
@@ -229,7 +213,7 @@ class _CategorySection extends StatelessWidget {
   }
 }
 
-// ── Book card widget ────────────────────────────────────────
+// ── Book card ─────────────────────────────────────────────────────────────────
 class _BookCard extends StatelessWidget {
   final Book book;
   const _BookCard({required this.book});
@@ -244,28 +228,46 @@ class _BookCard extends StatelessWidget {
       child: Container(
         width: 130,
         margin: const EdgeInsets.only(right: 14),
-        child: Column(
+        child: Column(                          // ✅ Column.children is a List
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // ── Cover ────────────────────────────────
-            ClipRRect(
-              borderRadius: BorderRadius.circular(14),
-              child: Image.network(
-                BookApi().getCoverUrl(book.id),
-                width: 130,
-                height: 170,
-                fit: BoxFit.cover,
-                errorBuilder: (_, _, _) => Container(
-                  width: 130,
-                  height: 170,
-                  decoration: BoxDecoration(
-                    color: Colors.teal[50],
-                    borderRadius: BorderRadius.circular(14),
+            // ── Cover image + favourite button ────────────────────────────
+            Stack(                             // ✅ Stack is one item in the list
+              children: [
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(14),
+                  child: Image.network(
+                    BookApi.instance.getCoverUrl(book.id),
+                    headers: BookApi.instance.imageHeaders,
+                    width: 130,
+                    height: 170,
+                    fit: BoxFit.cover,
+                    errorBuilder: (context, error, stackTrace) => Container(
+                      // ✅ three distinct param names — no duplicate wildcards
+                      width: 130,
+                      height: 170,
+                      decoration: BoxDecoration(
+                        color: Colors.teal[50],
+                        borderRadius: BorderRadius.circular(14),
+                      ),
+                      child: const Icon(
+                        Icons.book,
+                        size: 48,
+                        color: Colors.teal,
+                      ),
+                    ),
                   ),
-                  child: const Icon(Icons.book, size: 48, color: Colors.teal),
                 ),
-              ),
+                // Heart button overlay
+                Positioned(
+                  top: 8,
+                  right: 8,
+                  child: FavoriteButton(book: book),
+                ),
+              ],
             ),
+
+            // ── Title & author ─────────────────────────────────────────────
             const SizedBox(height: 8),
             Text(
               book.title,

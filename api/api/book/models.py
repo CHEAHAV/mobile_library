@@ -10,7 +10,7 @@ class BOOK(Base):
     id = Column(String(64), primary_key=True, nullable=False, default=lambda: str(uuid.uuid4()))
     title       = Column(String(100), nullable=False)
     description = Column(String(255), nullable=False)
-    author_name = Column(String(100), nullable=False)
+    author_name = Column(String(100))
     rating      = Column(Numeric(3, 2), nullable=False)
     language    = Column(String(64), nullable=False)
     page        = Column(Integer)

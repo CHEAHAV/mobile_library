@@ -7,7 +7,7 @@ class ApiService {
   // toggle: true = use ngrok, false = use local
   static const bool useNgrok = true;
   // update this every time after restart ngrok
-  static const String ngrokUrl = 'https://timberless-jonah-pedunculate.ngrok-free.dev';
+  static const String ngrokUrl = 'https://ellsworth-laughterless-mora.ngrok-free.dev';
 
    // baseUrl auto-picks ngrok or local device URL
   static String _baseUrl = ngrokUrl;

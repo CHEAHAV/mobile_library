@@ -5,7 +5,7 @@ class BookResponse(BaseModel):
     id         : str
     title      : str
     description: str
-    author_name: str
+    author_name: str | None = None
     rating     : float
     language   : str
     page       : int
@@ -17,7 +17,7 @@ class BookResponse(BaseModel):
 class BookModel(BaseModel):
     title      : str
     description: str
-    author_name: str
+    author_name: str | None = None
     rating     : float
     language   : str
     page       : int
