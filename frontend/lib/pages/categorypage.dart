@@ -13,13 +13,13 @@ class CategoryPage extends StatefulWidget {
 class _CategoryPageState extends State<CategoryPage> {
   late Future<List<Category>> _futureCategories;
   final _searchCtrl = TextEditingController();
-  List<Category> _all      = [];
+  List<Category> _all = [];
   List<Category> _filtered = [];
 
-  static const _navy    = Color(0xFF1A1F5E);
-  static const _bgGrey  = Color(0xFFF4F2EE);
-  static const _cardBg  = Color(0xFFFFFFFF);
-  static const _muted   = Color(0xFF888888);
+  static const _navy = Color(0xFF1A1F5E);
+  static const _bgGrey = Color(0xFFFDF6E3);
+  static const _cardBg = Color(0xFFFFFAF0);
+  static const _muted = Color(0xFF888888);
 
   // badge colours cycle through these
   static const _badgeColors = [
@@ -58,8 +58,8 @@ class _CategoryPageState extends State<CategoryPage> {
       _filtered = q.isEmpty
           ? _all
           : _all
-              .where((c) => c.categoryName.toLowerCase().contains(q))
-              .toList();
+                .where((c) => c.categoryName.toLowerCase().contains(q))
+                .toList();
     });
   }
 
@@ -88,26 +88,29 @@ class _CategoryPageState extends State<CategoryPage> {
                   }
                   if (snapshot.hasError) {
                     return Center(
-                      child: Text('Error: ${snapshot.error}',
-                          style: const TextStyle(color: Colors.red)),
+                      child: Text(
+                        'Error: ${snapshot.error}',
+                        style: const TextStyle(color: Colors.red),
+                      ),
                     );
                   }
                   if (_all.isEmpty && snapshot.hasData) {
-                    _all      = snapshot.data!;
+                    _all = snapshot.data!;
                     _filtered = _all;
                   }
                   if (_filtered.isEmpty) {
                     return const Center(
-                      child: Text('No categories found.',
-                          style: TextStyle(color: _muted)),
+                      child: Text(
+                        'No categories found.',
+                        style: TextStyle(color: _muted),
+                      ),
                     );
                   }
                   return ListView.separated(
                     padding: const EdgeInsets.fromLTRB(16, 4, 16, 24),
                     itemCount: _filtered.length,
                     separatorBuilder: (_, _) => const SizedBox(height: 10),
-                    itemBuilder: (_, i) =>
-                        _categoryTile(_filtered[i], i),
+                    itemBuilder: (_, i) => _categoryTile(_filtered[i], i),
                   );
                 },
               ),
@@ -120,73 +123,68 @@ class _CategoryPageState extends State<CategoryPage> {
 
   // ── Top bar ───────────────────────────────────────────────────────────────
   Widget _topBar() => Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 10),
-        child: Row(
-          children: [
-            IconButton(
-              onPressed: () => Navigator.maybePop(context),
-              icon: const Icon(Icons.arrow_back, size: 22),
-            ),
-            const Expanded(
-              child: Center(
-                child: Text(
-                  'All Categories',
-                  style: TextStyle(
-                    fontFamily: 'Georgia',
-                    fontSize: 18,
-                    fontWeight: FontWeight.w700,
-                    color: _navy,
-                  ),
-                ),
+    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+    child: Row(
+      children: [
+        const Expanded(
+          child: Center(
+            child: Text(
+              'All Categories',
+              style: TextStyle(
+                fontFamily: 'Georgia',
+                fontSize: 18,
+                fontWeight: FontWeight.w700,
+                color: _navy,
               ),
             ),
-            const SizedBox(width: 48),
-          ],
+          ),
         ),
-      );
+        const SizedBox(width: 48),
+      ],
+    ),
+  );
 
   // ── Search bar ────────────────────────────────────────────────────────────
   Widget _searchBar() => Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16),
-        child: Container(
-          height: 46,
-          decoration: BoxDecoration(
-            color: _cardBg,
-            borderRadius: BorderRadius.circular(30),
-            boxShadow: [
-              BoxShadow(
-                // ignore: deprecated_member_use
-                color: Colors.black.withOpacity(0.07),
-                blurRadius: 10,
-                offset: const Offset(0, 2),
-              ),
-            ],
+    padding: const EdgeInsets.symmetric(horizontal: 16),
+    child: Container(
+      height: 46,
+      decoration: BoxDecoration(
+        color: _cardBg,
+        borderRadius: BorderRadius.circular(30),
+        boxShadow: [
+          BoxShadow(
+            // ignore: deprecated_member_use
+            color: Colors.black.withOpacity(0.07),
+            blurRadius: 10,
+            offset: const Offset(0, 2),
           ),
-          child: TextField(
-            controller: _searchCtrl,
-            style: const TextStyle(fontSize: 14),
-            decoration: InputDecoration(
-              hintText: 'Search categories...',
-              hintStyle:
-                  TextStyle(color: Colors.grey[400], fontSize: 14),
-              prefixIcon:
-                  Icon(Icons.search, color: Colors.grey[400], size: 20),
-              border: InputBorder.none,
-              contentPadding:
-                  const EdgeInsets.symmetric(vertical: 14),
-            ),
-          ),
+        ],
+      ),
+      child: TextField(
+        controller: _searchCtrl,
+        style: const TextStyle(fontSize: 14),
+        decoration: InputDecoration(
+          hintText: 'Search categories...',
+          hintStyle: TextStyle(color: Colors.grey[400], fontSize: 14),
+          prefixIcon: Icon(Icons.search, color: Colors.grey[400], size: 20),
+          border: InputBorder.none,
+          contentPadding: const EdgeInsets.symmetric(vertical: 14),
         ),
-      );
+      ),
+    ),
+  );
 
   // ── Category tile ─────────────────────────────────────────────────────────
   Widget _categoryTile(Category category, int index) {
     final badgeColor = _badgeColors[index % _badgeColors.length];
-    final desc       = index < _descriptions.length
+    final desc = index < _descriptions.length
         ? _descriptions[index]
         : '${category.books.length} books available';
-    final number     = (index + 1).toString().padLeft(2, '0');
-    final isSelected = index == 2; // highlight example — wire up state if needed
+    final number = (index + 1).toString().padLeft(
+      2,
+      '0',
+    ); // highlight example — wire up state if needed
 
     return GestureDetector(
       onTap: () => Navigator.push(
@@ -200,13 +198,6 @@ class _CategoryPageState extends State<CategoryPage> {
         decoration: BoxDecoration(
           color: _cardBg,
           borderRadius: BorderRadius.circular(14),
-          border: Border.all(
-            color: isSelected
-                // ignore: deprecated_member_use
-                ? const Color(0xFF2B4EFF).withOpacity(0.4)
-                : Colors.transparent,
-            width: 1.5,
-          ),
           boxShadow: [
             BoxShadow(
               // ignore: deprecated_member_use
@@ -246,19 +237,12 @@ class _CategoryPageState extends State<CategoryPage> {
                 children: [
                   Text(
                     category.categoryName,
-                    style: TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.w700,
-                      color: isSelected
-                          ? const Color(0xFF2B4EFF)
-                          : Colors.black87,
-                    ),
+                    style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700),
                   ),
                   const SizedBox(height: 3),
                   Text(
                     desc,
-                    style: const TextStyle(
-                        fontSize: 12, color: _muted),
+                    style: const TextStyle(fontSize: 12, color: _muted),
                   ),
                 ],
               ),

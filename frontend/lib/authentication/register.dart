@@ -13,23 +13,23 @@ class RegisterPage extends StatefulWidget {
 
 class _RegisterPageState extends State<RegisterPage> {
   final _usernameCtrl = TextEditingController();
-  final _emailCtrl    = TextEditingController();
+  final _emailCtrl = TextEditingController();
   final _passwordCtrl = TextEditingController();
-  final _phoneCtrl    = TextEditingController();
-  final _formKey      = GlobalKey<FormState>();
+  final _phoneCtrl = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
 
-  bool    _obscurePassword = true;
-  bool    _isLoading       = false;
+  bool _obscurePassword = true;
+  bool _isLoading = false;
   String? _errorMessage;
-  String  _gender          = 'male';
-  File?   _pickedImage;
+  String _gender = 'male';
+  File? _pickedImage;
 
-  static const _darkGreen   = Color(0xFF2D4A2D);
-  static const _cream       = Color(0xFFF5F0E8);
-  static const _inputBg     = Color(0xFFFFFFFF);
+  static const _blue = Color.fromARGB(255, 24, 76, 197);
+  static const _cream = Color(0xFFFDF6E3);
+  static const _inputBg = Color(0xFFFFFAF0);
   static const _inputBorder = Color(0xFFDDD8CC);
-  static const _textDark    = Color(0xFF1C2B1C);
-  static const _textMuted   = Color(0xFF888070);
+  static const _textDark = Color(0xFF1C2B1C);
+  static const _textMuted = Color(0xFF888070);
 
   Future<void> _pickImage() async {
     final picked = await ImagePicker().pickImage(
@@ -57,25 +57,25 @@ class _RegisterPageState extends State<RegisterPage> {
     bool success = false;
 
     try {
-      final photoBytes    = await _pickedImage!.readAsBytes();
+      final photoBytes = await _pickedImage!.readAsBytes();
       final photoFilename = _pickedImage!.path.split('/').last;
 
       await UserApi.instance.createUser(
-        username:      _usernameCtrl.text.trim(),
-        email:         _emailCtrl.text.trim().toLowerCase(),
-        password:      _passwordCtrl.text,
-        phone:         _phoneCtrl.text.trim(),
-        gender:        _gender,
-        photoBytes:    photoBytes,
+        username: _usernameCtrl.text.trim(),
+        email: _emailCtrl.text.trim().toLowerCase(),
+        password: _passwordCtrl.text,
+        phone: _phoneCtrl.text.trim(),
+        gender: _gender,
+        photoBytes: photoBytes,
         photoFilename: photoFilename,
       );
 
       success = true; // ✅ mark success before finally runs
-
     } catch (e) {
       if (mounted) {
         setState(() {
-          _errorMessage = e.toString()
+          _errorMessage = e
+              .toString()
               // clean up nested exception prefix
               .replaceAll('Exception: ', '');
         });
@@ -92,7 +92,8 @@ class _RegisterPageState extends State<RegisterPage> {
         barrierDismissible: false,
         builder: (_) => AlertDialog(
           shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(20)),
+            borderRadius: BorderRadius.circular(20),
+          ),
           contentPadding: const EdgeInsets.all(28),
           content: Column(
             mainAxisSize: MainAxisSize.min,
@@ -102,11 +103,14 @@ class _RegisterPageState extends State<RegisterPage> {
                 height: 72,
                 decoration: BoxDecoration(
                   // ignore: deprecated_member_use
-                  color: _darkGreen.withOpacity(0.1),
+                  color: _blue.withOpacity(0.1),
                   shape: BoxShape.circle,
                 ),
-                child: const Icon(Icons.check_circle_rounded,
-                    color: _darkGreen, size: 44),
+                child: const Icon(
+                  Icons.check_circle_rounded,
+                  color: _blue,
+                  size: 44,
+                ),
               ),
               const SizedBox(height: 18),
               const Text(
@@ -123,7 +127,10 @@ class _RegisterPageState extends State<RegisterPage> {
                 'Welcome, ${_usernameCtrl.text.trim()}!\nYour account is ready.',
                 textAlign: TextAlign.center,
                 style: const TextStyle(
-                    fontSize: 13, color: _textMuted, height: 1.5),
+                  fontSize: 13,
+                  color: _textMuted,
+                  height: 1.5,
+                ),
               ),
               const SizedBox(height: 24),
               SizedBox(
@@ -132,18 +139,20 @@ class _RegisterPageState extends State<RegisterPage> {
                 child: ElevatedButton(
                   onPressed: () {
                     Navigator.pop(context); // close dialog
-                    widget.onTap?.call();   // go to login
+                    widget.onTap?.call(); // go to login
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: _darkGreen,
+                    backgroundColor: _blue,
                     foregroundColor: Colors.white,
                     shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12)),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
                     elevation: 0,
                   ),
-                  child: const Text('Sign In Now',
-                      style: TextStyle(
-                          fontWeight: FontWeight.w700, fontSize: 14)),
+                  child: const Text(
+                    'Sign In Now',
+                    style: TextStyle(fontWeight: FontWeight.w700, fontSize: 14),
+                  ),
                 ),
               ),
             ],
@@ -165,24 +174,23 @@ class _RegisterPageState extends State<RegisterPage> {
             children: [
               // ── Top bar ──────────────────────────────────────────────────
               Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 8,
+                ),
                 child: Row(
                   children: [
-                    IconButton(
-                      icon: const Icon(Icons.arrow_back,
-                          color: Colors.black87),
-                      onPressed: () => Navigator.maybePop(context),
-                    ),
                     const Expanded(
                       child: Center(
-                        child: Text('New Member',
-                            style: TextStyle(
-                              fontFamily: 'Georgia',
-                              fontSize: 20,
-                              fontWeight: FontWeight.w700,
-                              color: _textDark,
-                            )),
+                        child: Text(
+                          'New Account',
+                          style: TextStyle(
+                            fontFamily: 'Georgia',
+                            fontSize: 20,
+                            fontWeight: FontWeight.w700,
+                            color: _textDark,
+                          ),
+                        ),
                       ),
                     ),
                     const SizedBox(width: 48),
@@ -197,7 +205,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(14),
                   image: const DecorationImage(
-                    image: AssetImage('assets/images/book_hero.jpg'),
+                    image: AssetImage('assets/images/library/register.png'),
                     fit: BoxFit.cover,
                   ),
                   color: const Color(0xFF3D2B00),
@@ -213,18 +221,23 @@ class _RegisterPageState extends State<RegisterPage> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text('Join Our Community',
-                          style: TextStyle(
-                            fontFamily: 'Georgia',
-                            fontSize: 26,
-                            fontWeight: FontWeight.bold,
-                            color: _textDark,
-                          )),
+                      const Text(
+                        'Join Our Community',
+                        style: TextStyle(
+                          fontFamily: 'Georgia',
+                          fontSize: 26,
+                          fontWeight: FontWeight.bold,
+                          color: _textDark,
+                        ),
+                      ),
                       const SizedBox(height: 6),
                       const Text(
                         'Open the door to a million stories. Begin\nyour next chapter with us.',
                         style: TextStyle(
-                            fontSize: 13, color: _textMuted, height: 1.5),
+                          fontSize: 13,
+                          color: _textMuted,
+                          height: 1.5,
+                        ),
                       ),
                       const SizedBox(height: 24),
 
@@ -241,8 +254,11 @@ class _RegisterPageState extends State<RegisterPage> {
                                     ? FileImage(_pickedImage!)
                                     : null,
                                 child: _pickedImage == null
-                                    ? const Icon(Icons.person_outline,
-                                        size: 40, color: _textMuted)
+                                    ? const Icon(
+                                        Icons.person_outline,
+                                        size: 40,
+                                        color: _textMuted,
+                                      )
                                     : null,
                               ),
                               Positioned(
@@ -251,10 +267,14 @@ class _RegisterPageState extends State<RegisterPage> {
                                 child: Container(
                                   padding: const EdgeInsets.all(5),
                                   decoration: const BoxDecoration(
-                                      color: _darkGreen,
-                                      shape: BoxShape.circle),
-                                  child: const Icon(Icons.camera_alt,
-                                      size: 14, color: Colors.white),
+                                    color: _blue,
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: const Icon(
+                                    Icons.camera_alt,
+                                    size: 14,
+                                    color: Colors.white,
+                                  ),
                                 ),
                               ),
                             ],
@@ -263,9 +283,10 @@ class _RegisterPageState extends State<RegisterPage> {
                       ),
                       const SizedBox(height: 8),
                       const Center(
-                        child: Text('Tap to upload photo',
-                            style:
-                                TextStyle(fontSize: 11, color: _textMuted)),
+                        child: Text(
+                          'Tap to upload photo',
+                          style: TextStyle(fontSize: 11, color: _textMuted),
+                        ),
                       ),
                       const SizedBox(height: 20),
 
@@ -274,7 +295,7 @@ class _RegisterPageState extends State<RegisterPage> {
                       const SizedBox(height: 6),
                       _buildField(
                         controller: _usernameCtrl,
-                        hint: 'John Doe',
+                        hint: 'Enter your full name',
                         icon: Icons.person_outline,
                         validator: (v) {
                           if (v == null || v.trim().isEmpty) {
@@ -293,7 +314,7 @@ class _RegisterPageState extends State<RegisterPage> {
                       const SizedBox(height: 6),
                       _buildField(
                         controller: _emailCtrl,
-                        hint: 'reader@library.com',
+                        hint: 'Enter your Email',
                         icon: Icons.email_outlined,
                         keyboardType: TextInputType.emailAddress,
                         validator: (v) {
@@ -313,7 +334,7 @@ class _RegisterPageState extends State<RegisterPage> {
                       const SizedBox(height: 6),
                       _buildField(
                         controller: _phoneCtrl,
-                        hint: '012 345 6789',
+                        hint: 'Enter your phone number',
                         icon: Icons.phone_outlined,
                         keyboardType: TextInputType.phone,
                         validator: (v) {
@@ -330,11 +351,11 @@ class _RegisterPageState extends State<RegisterPage> {
                       const SizedBox(height: 8),
                       Row(
                         children: [
-                          _genderChip('male',   '👨 Male'),
+                          _genderChip('male', '👨 Male'),
                           const SizedBox(width: 10),
                           _genderChip('female', '👩 Female'),
                           const SizedBox(width: 10),
-                          _genderChip('other',  '🧑 Other'),
+                          _genderChip('other', '🧑 Other'),
                         ],
                       ),
                       const SizedBox(height: 14),
@@ -356,7 +377,8 @@ class _RegisterPageState extends State<RegisterPage> {
                             color: _textMuted,
                           ),
                           onPressed: () => setState(
-                              () => _obscurePassword = !_obscurePassword),
+                            () => _obscurePassword = !_obscurePassword,
+                          ),
                         ),
                         validator: (v) {
                           if (v == null || v.isEmpty) {
@@ -380,16 +402,20 @@ class _RegisterPageState extends State<RegisterPage> {
                           child: Row(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Icon(Icons.error_outline,
-                                  color: Colors.red.shade600, size: 16),
+                              Icon(
+                                Icons.error_outline,
+                                color: Colors.red.shade600,
+                                size: 16,
+                              ),
                               const SizedBox(width: 8),
                               Expanded(
                                 child: Text(
                                   _errorMessage!,
                                   style: TextStyle(
-                                      color: Colors.red.shade700,
-                                      fontSize: 12,
-                                      height: 1.4),
+                                    color: Colors.red.shade700,
+                                    fontSize: 12,
+                                    height: 1.4,
+                                  ),
                                 ),
                               ),
                             ],
@@ -410,22 +436,29 @@ class _RegisterPageState extends State<RegisterPage> {
                                   width: 18,
                                   height: 18,
                                   child: CircularProgressIndicator(
-                                      color: Colors.white, strokeWidth: 2),
+                                    color: Colors.white,
+                                    strokeWidth: 2,
+                                  ),
                                 )
-                              : const Text('📚',
-                                  style: TextStyle(fontSize: 18)),
+                              : const Text(
+                                  '📚',
+                                  style: TextStyle(fontSize: 18),
+                                ),
                           label: Text(
                             _isLoading
                                 ? 'Creating Account...'
                                 : 'Create Account',
                             style: const TextStyle(
-                                fontSize: 15, fontWeight: FontWeight.w700),
+                              fontSize: 15,
+                              fontWeight: FontWeight.w700,
+                            ),
                           ),
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: _darkGreen,
+                            backgroundColor: _blue,
                             foregroundColor: Colors.white,
                             shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12)),
+                              borderRadius: BorderRadius.circular(12),
+                            ),
                             elevation: 0,
                           ),
                         ),
@@ -439,13 +472,12 @@ class _RegisterPageState extends State<RegisterPage> {
                           child: RichText(
                             text: const TextSpan(
                               text: 'Already a member? ',
-                              style:
-                                  TextStyle(color: _textMuted, fontSize: 13),
+                              style: TextStyle(color: _textMuted, fontSize: 13),
                               children: [
                                 TextSpan(
                                   text: 'Log In',
                                   style: TextStyle(
-                                    color: _darkGreen,
+                                    color: _blue,
                                     fontWeight: FontWeight.w700,
                                     fontSize: 13,
                                   ),
@@ -457,8 +489,11 @@ class _RegisterPageState extends State<RegisterPage> {
                       ),
                       const SizedBox(height: 28),
                       const Center(
-                        child: Icon(Icons.menu_book_outlined,
-                            size: 28, color: _inputBorder),
+                        child: Icon(
+                          Icons.menu_book_outlined,
+                          size: 28,
+                          color: _inputBorder,
+                        ),
                       ),
                       const SizedBox(height: 16),
                     ],
@@ -472,9 +507,14 @@ class _RegisterPageState extends State<RegisterPage> {
     );
   }
 
-  Widget _label(String text) => Text(text,
-      style: const TextStyle(
-          fontSize: 13, fontWeight: FontWeight.w600, color: _textDark));
+  Widget _label(String text) => Text(
+    text,
+    style: const TextStyle(
+      fontSize: 13,
+      fontWeight: FontWeight.w600,
+      color: _textDark,
+    ),
+  );
 
   Widget _buildField({
     required TextEditingController controller,
@@ -498,20 +538,26 @@ class _RegisterPageState extends State<RegisterPage> {
         suffixIcon: suffixIcon,
         filled: true,
         fillColor: _inputBg,
-        contentPadding:
-            const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 16,
+          vertical: 14,
+        ),
         border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10),
-            borderSide: const BorderSide(color: _inputBorder)),
+          borderRadius: BorderRadius.circular(10),
+          borderSide: const BorderSide(color: _inputBorder),
+        ),
         enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10),
-            borderSide: const BorderSide(color: _inputBorder)),
+          borderRadius: BorderRadius.circular(10),
+          borderSide: const BorderSide(color: _inputBorder),
+        ),
         focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10),
-            borderSide: const BorderSide(color: _darkGreen, width: 1.5)),
+          borderRadius: BorderRadius.circular(10),
+          borderSide: const BorderSide(color: _blue, width: 1.5),
+        ),
         errorBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10),
-            borderSide: BorderSide(color: Colors.red.shade300)),
+          borderRadius: BorderRadius.circular(10),
+          borderSide: BorderSide(color: Colors.red.shade300),
+        ),
       ),
     );
   }
@@ -524,16 +570,21 @@ class _RegisterPageState extends State<RegisterPage> {
         duration: const Duration(milliseconds: 180),
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
         decoration: BoxDecoration(
-          color: selected ? _darkGreen : _inputBg,
+          color: selected ? _blue : _inputBg,
           borderRadius: BorderRadius.circular(20),
           border: Border.all(
-              color: selected ? _darkGreen : _inputBorder, width: 1.5),
+            color: selected ? _blue : _inputBorder,
+            width: 1.5,
+          ),
         ),
-        child: Text(label,
-            style: TextStyle(
-                fontSize: 12,
-                fontWeight: FontWeight.w600,
-                color: selected ? Colors.white : _textMuted)),
+        child: Text(
+          label,
+          style: TextStyle(
+            fontSize: 12,
+            fontWeight: FontWeight.w600,
+            color: selected ? Colors.white : _textMuted,
+          ),
+        ),
       ),
     );
   }

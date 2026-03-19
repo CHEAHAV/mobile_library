@@ -8,9 +8,9 @@ class CategoryBooksPage extends StatelessWidget {
   final Category category;
   const CategoryBooksPage({super.key, required this.category});
 
-  static const _navy   = Color(0xFF1A1F5E);
-  static const _bgGrey = Color(0xFFF4F2EE);
-  static const _muted  = Color(0xFF888888);
+  static const _navy = Color(0xFF1A1F5E);
+  static const _bgGrey = Color(0xFFFDF6E3);
+  static const _muted = Color(0xFF888888);
 
   @override
   Widget build(BuildContext context) {
@@ -21,8 +21,7 @@ class CategoryBooksPage extends StatelessWidget {
           children: [
             // ── Top bar ────────────────────────────────────────────────
             Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 8, vertical: 10),
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 10),
               child: Row(
                 children: [
                   IconButton(
@@ -63,21 +62,22 @@ class CategoryBooksPage extends StatelessWidget {
             Expanded(
               child: category.books.isEmpty
                   ? const Center(
-                      child: Text('No books in this category.',
-                          style: TextStyle(color: _muted)),
+                      child: Text(
+                        'No books in this category.',
+                        style: TextStyle(color: _muted),
+                      ),
                     )
                   : GridView.builder(
                       padding: const EdgeInsets.fromLTRB(16, 0, 16, 24),
                       gridDelegate:
                           const SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 3,
-                        crossAxisSpacing: 12,
-                        mainAxisSpacing: 16,
-                        childAspectRatio: 0.58,
-                      ),
+                            crossAxisCount: 3,
+                            crossAxisSpacing: 12,
+                            mainAxisSpacing: 16,
+                            childAspectRatio: 0.52,
+                          ),
                       itemCount: category.books.length,
-                      itemBuilder: (_, i) =>
-                          _BookCard(book: category.books[i]),
+                      itemBuilder: (_, i) => _BookCard(book: category.books[i]),
                     ),
             ),
           ],
@@ -99,8 +99,7 @@ class _BookCard extends StatelessWidget {
     return GestureDetector(
       onTap: () => Navigator.push(
         context,
-        MaterialPageRoute(
-            builder: (_) => BookDetailScreen(book: book)),
+        MaterialPageRoute(builder: (_) => BookDetailScreen(book: book)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -120,8 +119,7 @@ class _BookCard extends StatelessWidget {
                   color: Colors.teal[50],
                   borderRadius: BorderRadius.circular(10),
                 ),
-                child:
-                    const Icon(Icons.book, size: 40, color: Colors.teal),
+                child: const Icon(Icons.book, size: 40, color: Colors.teal),
               ),
             ),
           ),
@@ -130,8 +128,7 @@ class _BookCard extends StatelessWidget {
             book.title,
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
-            style: const TextStyle(
-                fontSize: 11, fontWeight: FontWeight.w700),
+            style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w700),
           ),
           const SizedBox(height: 2),
           Text(

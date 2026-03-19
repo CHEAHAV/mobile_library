@@ -4,6 +4,7 @@ import 'package:frontend/apis/category_api.dart';
 import 'package:frontend/components/favorite_button.dart';
 import 'package:frontend/models/category.dart';
 import 'package:frontend/models/book.dart';
+import 'package:frontend/pages/category_books_page.dart';
 import 'package:frontend/screens/book_detail_screen.dart';
 
 class HomePage extends StatefulWidget {
@@ -32,7 +33,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF5F5F5),
+      backgroundColor: const Color(0xFFFDF6E3),
       body: SafeArea(
         child: FutureBuilder<List<Category>>(
           future: futureCategories,
@@ -93,7 +94,7 @@ class _HomePageState extends State<HomePage> {
                         // ── Search bar ──────────────────────────────────────
                         Container(
                           decoration: BoxDecoration(
-                            color: Colors.white,
+                            color: const Color(0xFFFFFAF0),
                             borderRadius: BorderRadius.circular(30),
                             boxShadow: [
                               BoxShadow(
@@ -112,11 +113,14 @@ class _HomePageState extends State<HomePage> {
                                 color: Colors.grey[400],
                                 fontSize: 14,
                               ),
-                              prefixIcon:
-                                  Icon(Icons.search, color: Colors.grey[400]),
+                              prefixIcon: Icon(
+                                Icons.search,
+                                color: Colors.grey[400],
+                              ),
                               border: InputBorder.none,
-                              contentPadding:
-                                  const EdgeInsets.symmetric(vertical: 14),
+                              contentPadding: const EdgeInsets.symmetric(
+                                vertical: 14,
+                              ),
                             ),
                           ),
                         ),
@@ -145,22 +149,19 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _iconBtn(IconData icon) => Container(
-        decoration: BoxDecoration(
-          color: Colors.white,
-          shape: BoxShape.circle,
-          boxShadow: [
-            BoxShadow(
-              // ignore: deprecated_member_use
-              color: Colors.black.withOpacity(0.08),
-              blurRadius: 8,
-            ),
-          ],
+    decoration: BoxDecoration(
+      color: const Color(0xFFFFFAF0),
+      shape: BoxShape.circle,
+      boxShadow: [
+        BoxShadow(
+          // ignore: deprecated_member_use
+          color: Colors.black.withOpacity(0.08),
+          blurRadius: 8,
         ),
-        child: IconButton(
-          icon: Icon(icon, size: 20),
-          onPressed: () {},
-        ),
-      );
+      ],
+    ),
+    child: IconButton(icon: Icon(icon, size: 20), onPressed: () {}),
+  );
 }
 
 // ── Category section ──────────────────────────────────────────────────────────
@@ -179,15 +180,26 @@ class _CategorySection extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                category.categoryName,
-                style: const TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
+              Expanded(
+                // ✅ FIXED HERE
+                child: Text(
+                  category.categoryName,
+                  style: const TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  maxLines: 1, // ✅ FIXED HERE
+                  overflow: TextOverflow.ellipsis, // ✅ FIXED HERE
                 ),
               ),
+              const SizedBox(width: 8), // ✅ FIXED HERE
               GestureDetector(
-                onTap: () {},
+                onTap: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => CategoryBooksPage(category: category),
+                  ),
+                ),
                 child: const Text(
                   'See More',
                   style: TextStyle(
@@ -202,7 +214,7 @@ class _CategorySection extends StatelessWidget {
 
         // Horizontal book list
         SizedBox(
-          height: 240,
+          height: 220,
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
             padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -230,11 +242,11 @@ class _BookCard extends StatelessWidget {
       child: Container(
         width: 130,
         margin: const EdgeInsets.only(right: 14),
-        child: Column(                          // ✅ Column.children is a List
+        child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min, // ✅ shrink to content
           children: [
-            // ── Cover image + favourite button ────────────────────────────
-            Stack(                             // ✅ Stack is one item in the list
+            Stack(
               children: [
                 ClipRRect(
                   borderRadius: BorderRadius.circular(14),
@@ -242,12 +254,11 @@ class _BookCard extends StatelessWidget {
                     BookApi.instance.getCoverUrl(book.id),
                     headers: BookApi.instance.imageHeaders,
                     width: 130,
-                    height: 170,
+                    height: 160, // ✅ reduced from 170
                     fit: BoxFit.cover,
                     errorBuilder: (context, error, stackTrace) => Container(
-                      // ✅ three distinct param names — no duplicate wildcards
                       width: 130,
-                      height: 170,
+                      height: 160, // ✅ match above
                       decoration: BoxDecoration(
                         color: Colors.teal[50],
                         borderRadius: BorderRadius.circular(14),
@@ -260,25 +271,15 @@ class _BookCard extends StatelessWidget {
                     ),
                   ),
                 ),
-                // Heart button overlay
-                Positioned(
-                  top: 8,
-                  right: 8,
-                  child: FavoriteButton(book: book),
-                ),
+                Positioned(top: 8, right: 8, child: FavoriteButton(book: book)),
               ],
             ),
-
-            // ── Title & author ─────────────────────────────────────────────
-            const SizedBox(height: 8),
+            const SizedBox(height: 6),
             Text(
               book.title,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
-              style: const TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 13,
-              ),
+              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
             ),
             const SizedBox(height: 2),
             Text(

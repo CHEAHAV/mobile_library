@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
+import 'package:frontend/components/circle_button.dart';
 import 'package:http/http.dart' as http;
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 import 'package:frontend/models/book.dart';
@@ -58,9 +59,15 @@ class _PdfViewerScreenState extends State<PdfViewerScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: const Color(0xFFFDF6E3),
       appBar: AppBar(
-        backgroundColor: Colors.black,
+        leading: CircleButton(
+          dark: false,
+          icon: Icons.arrow_back_ios_new_rounded,
+          onTap: () => Navigator.pop(context),
+        ),
+        centerTitle: true,
+        backgroundColor: const Color.fromARGB(255, 119, 82, 3),
         iconTheme: const IconThemeData(color: Colors.white),
         title: Text(
           widget.book.title,
@@ -72,9 +79,12 @@ class _PdfViewerScreenState extends State<PdfViewerScreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  CircularProgressIndicator(color: Colors.white),
+                  CircularProgressIndicator(color: Color(0xFFB8860B)),
                   SizedBox(height: 16),
-                  Text('Loading PDF...', style: TextStyle(color: Colors.white)),
+                  Text(
+                    'Loading PDF...',
+                    style: TextStyle(color: Color(0xFFB8860B)),
+                  ),
                 ],
               ),
             )
@@ -88,7 +98,7 @@ class _PdfViewerScreenState extends State<PdfViewerScreen> {
                   Text(
                     _error!,
                     textAlign: TextAlign.center,
-                    style: const TextStyle(color: Colors.white),
+                    style: const TextStyle(color: Color(0xFF3E2A00)),
                   ),
                   const SizedBox(height: 16),
                   ElevatedButton(

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/apis/book_api.dart';
+import 'package:frontend/components/circle_button.dart';
 import 'package:frontend/components/favorite_button.dart';
 import 'package:frontend/models/book.dart';
 import 'package:frontend/screens/pdf_viewer_screen.dart';
@@ -22,7 +23,7 @@ class _BookDetailScreenState extends State<BookDetailScreen>
   static const _deepNavy = Color(0xFF0D0F2B);
   static const _midNavy = Color(0xFF1A1F5E);
   static const _royalBlue = Color(0xFF2B4EFF);
-  static const _cream = Color(0xFFFAF8F3);
+  static const _cream = Color(0xFFFDF6E3);
   static const _warmGold = Color(0xFFD4A853);
   static const _textDark = Color(0xFF1C1C2E);
   static const _textMuted = Color(0xFF8A8A9A);
@@ -68,19 +69,19 @@ class _BookDetailScreenState extends State<BookDetailScreen>
                 expandedHeight: 420,
                 pinned: true,
                 backgroundColor: _deepNavy,
-                leading: _circleBtn(
+                leading: CircleButton(
                   icon: Icons.arrow_back_ios_new_rounded,
                   onTap: () => Navigator.pop(context),
                 ),
                 actions: [
-                  _circleBtn(
+                  CircleButton(
                     child: FavoriteButton(
                       book: book,
                       size: 20,
                       showBackground: false,
                     ),
                   ),
-                  _circleBtn(icon: Icons.share_outlined, onTap: () {}),
+                  CircleButton(icon: Icons.share_outlined, onTap: () {}),
                   const SizedBox(width: 8),
                 ],
                 flexibleSpace: FlexibleSpaceBar(
@@ -503,17 +504,17 @@ class _BookDetailScreenState extends State<BookDetailScreen>
             child: SizedBox(
               height: 54,
               child: ElevatedButton.icon(
-                onPressed: ()  {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => PdfViewerScreen(
-                            book: book,
-                            downloadUrl: BookApi.instance.getPdfUrl(book.id),
-                          ),
-                        ),
-                      );
-                    },
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => PdfViewerScreen(
+                        book: book,
+                        downloadUrl: BookApi.instance.getPdfUrl(book.id),
+                      ),
+                    ),
+                  );
+                },
                 icon: const Icon(Icons.play_circle_filled_rounded, size: 22),
                 label: const Text(
                   'Read Now',
@@ -540,25 +541,6 @@ class _BookDetailScreenState extends State<BookDetailScreen>
   }
 
   // ── Helpers ────────────────────────────────────────────────────────────────
-
-  Widget _circleBtn({IconData? icon, Widget? child, VoidCallback? onTap}) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        margin: const EdgeInsets.all(6),
-        width: 38,
-        height: 38,
-        decoration: BoxDecoration(
-          // ignore: deprecated_member_use
-          color: Colors.white.withOpacity(0.15),
-          shape: BoxShape.circle,
-          // ignore: deprecated_member_use
-          border: Border.all(color: Colors.white.withOpacity(0.2)),
-        ),
-        child: child ?? Icon(icon, color: Colors.white, size: 18),
-      ),
-    );
-  }
 
   Widget _statBlock({
     required IconData icon,

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/apis/user_api.dart';
+import 'package:frontend/components/circle_button.dart';
 import 'package:frontend/navigations/bottom_nav.dart';
+import 'package:frontend/screens/onboard.dart';
 
 class LoginPage extends StatefulWidget {
   final VoidCallback? onTap;
@@ -21,10 +23,10 @@ class _LoginPageState extends State<LoginPage> {
 
   static const _navy = Color(0xFF1A1F5E);
   static const _royalBlue = Color(0xFF2B4EFF);
-  static const _bgGrey = Color(0xFFF2F2F2);
+  static const _bgGrey = Color(0xFFFDF6E3);
   static const _inputBorder = Color(0xFFD6D6D6);
 
-  // ✅ single clean _login — uses UserApi, old http.post block deleted
+  // single clean _login — uses UserApi, old http.post block deleted
   Future<void> _login() async {
     if (!_formKey.currentState!.validate()) return;
     setState(() {
@@ -40,9 +42,7 @@ class _LoginPageState extends State<LoginPage> {
       if (mounted) {
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(
-            builder: (_) => ButtomNav(user: user),
-          ), // ✅ pass user
+          MaterialPageRoute(builder: (_) => ButtomNav(user: user)), // pass user
         );
       }
     } catch (e) {
@@ -74,9 +74,14 @@ class _LoginPageState extends State<LoginPage> {
                 ),
                 child: Row(
                   children: [
-                    IconButton(
-                      icon: const Icon(Icons.arrow_back, color: Colors.black87),
-                      onPressed: () => Navigator.maybePop(context),
+                    CircleButton(
+                      dark: false, // light style
+                      icon: Icons.arrow_back_ios_new_rounded,
+                      onTap: () => Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(builder: (_) => const OnBoard()),
+                        (_) => false,
+                      ),
                     ),
                     const Expanded(
                       child: Center(
@@ -105,7 +110,7 @@ class _LoginPageState extends State<LoginPage> {
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(16),
                   image: const DecorationImage(
-                    image: AssetImage('assets/images/library_hero.jpg'),
+                    image: AssetImage('assets/images/library/login.png'),
                     fit: BoxFit.cover,
                   ),
                   color: const Color(0xFF8B6914),
@@ -157,7 +162,7 @@ class _LoginPageState extends State<LoginPage> {
                       const SizedBox(height: 6),
                       _buildTextField(
                         controller: _usernameCtrl,
-                        hint: 'your_username',
+                        hint: 'Username',
                         icon: Icons.person_outline,
                         validator: (v) => (v == null || v.trim().isEmpty)
                             ? 'Username is required'
@@ -332,7 +337,7 @@ class _LoginPageState extends State<LoginPage> {
                               ),
                               children: [
                                 TextSpan(
-                                  text: 'Apply for a Membership',
+                                  text: 'Create Account',
                                   style: TextStyle(
                                     color: _royalBlue,
                                     fontWeight: FontWeight.w700,
@@ -386,7 +391,7 @@ class _LoginPageState extends State<LoginPage> {
         prefixIcon: Icon(icon, size: 18, color: Colors.black38),
         suffixIcon: suffixIcon,
         filled: true,
-        fillColor: Colors.white,
+        fillColor: Color(0xFFFFFAF0),
         contentPadding: const EdgeInsets.symmetric(
           horizontal: 16,
           vertical: 14,
@@ -432,7 +437,7 @@ class _LoginPageState extends State<LoginPage> {
         padding: const EdgeInsets.symmetric(vertical: 12),
         side: const BorderSide(color: _inputBorder),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-        backgroundColor: Colors.white,
+        backgroundColor: Color(0xFFFFFAF0),
       ),
     );
   }

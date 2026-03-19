@@ -14,8 +14,8 @@ class FavoritePage extends StatefulWidget {
 class _FavoritePageState extends State<FavoritePage> {
   // ── Palette ─────────────────────────────────
   static const _royalBlue = Color(0xFF2B4EFF);
-  static const _bgGrey    = Color(0xFFF5F5F5);
-  static const _heartRed  = Color(0xFFE53935);
+  static const _bgGrey = Color(0xFFFDF6E3);
+  static const _heartRed = Color(0xFFE53935);
 
   final _fav = FavoriteService.instance;
 
@@ -46,11 +46,7 @@ class _FavoritePageState extends State<FavoritePage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _buildHeader(books.length),
-            Expanded(
-              child: books.isEmpty
-                  ? _buildEmpty()
-                  : _buildGrid(books),
-            ),
+            Expanded(child: books.isEmpty ? _buildEmpty() : _buildGrid(books)),
           ],
         ),
       ),
@@ -92,7 +88,9 @@ class _FavoritePageState extends State<FavoritePage> {
               if (count > 0)
                 Container(
                   padding: const EdgeInsets.symmetric(
-                      horizontal: 14, vertical: 6),
+                    horizontal: 14,
+                    vertical: 6,
+                  ),
                   decoration: BoxDecoration(
                     // ignore: deprecated_member_use
                     color: _royalBlue.withOpacity(0.1),
@@ -147,10 +145,7 @@ class _FavoritePageState extends State<FavoritePage> {
           const SizedBox(height: 8),
           Text(
             'Tap the ♥ on any book to save it here',
-            style: TextStyle(
-              fontSize: 13,
-              color: Colors.grey[500],
-            ),
+            style: TextStyle(fontSize: 13, color: Colors.grey[500]),
           ),
         ],
       ),
@@ -165,7 +160,7 @@ class _FavoritePageState extends State<FavoritePage> {
         crossAxisCount: 2,
         crossAxisSpacing: 14,
         mainAxisSpacing: 14,
-        childAspectRatio: 0.58,
+        childAspectRatio: 0.52,
       ),
       itemCount: books.length,
       itemBuilder: (_, i) => _FavoriteBookCard(book: books[i]),
@@ -178,7 +173,7 @@ class _FavoriteBookCard extends StatelessWidget {
   final Book book;
   const _FavoriteBookCard({required this.book});
 
-  static const _heartRed  = Color(0xFFE53935);
+  static const _heartRed = Color(0xFFE53935);
   static const _cardWhite = Color(0xFFFFFFFF);
   static const _textMuted = Color(0xFF888888);
 
@@ -210,7 +205,8 @@ class _FavoriteBookCard extends StatelessWidget {
               children: [
                 ClipRRect(
                   borderRadius: const BorderRadius.vertical(
-                      top: Radius.circular(16)),
+                    top: Radius.circular(16),
+                  ),
                   child: Image.network(
                     BookApi.instance.getCoverUrl(book.id),
                     headers: BookApi.instance.imageHeaders,
@@ -221,8 +217,8 @@ class _FavoriteBookCard extends StatelessWidget {
                       height: 180,
                       color: Colors.teal.shade50,
                       child: const Center(
-                          child: Icon(Icons.book,
-                              size: 48, color: Colors.teal)),
+                        child: Icon(Icons.book, size: 48, color: Colors.teal),
+                      ),
                     ),
                   ),
                 ),
@@ -245,8 +241,11 @@ class _FavoriteBookCard extends StatelessWidget {
                           ),
                         ],
                       ),
-                      child: const Icon(Icons.favorite,
-                          color: _heartRed, size: 16),
+                      child: const Icon(
+                        Icons.favorite,
+                        color: _heartRed,
+                        size: 16,
+                      ),
                     ),
                   ),
                 ),
@@ -254,8 +253,7 @@ class _FavoriteBookCard extends StatelessWidget {
             ),
             // Info
             Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -274,21 +272,20 @@ class _FavoriteBookCard extends StatelessWidget {
                     book.authorName ?? 'Unknown',
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
-                        fontSize: 11, color: _textMuted),
+                    style: const TextStyle(fontSize: 11, color: _textMuted),
                   ),
                   if (book.rating != null) ...[
                     const SizedBox(height: 6),
                     Row(
                       children: [
-                        const Icon(Icons.star,
-                            size: 12, color: Colors.amber),
+                        const Icon(Icons.star, size: 12, color: Colors.amber),
                         const SizedBox(width: 3),
                         Text(
                           book.rating!.toStringAsFixed(1),
                           style: const TextStyle(
-                              fontSize: 11,
-                              fontWeight: FontWeight.w600),
+                            fontSize: 11,
+                            fontWeight: FontWeight.w600,
+                          ),
                         ),
                       ],
                     ),
