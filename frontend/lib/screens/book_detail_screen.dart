@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:frontend/apis/book_api.dart';
 import 'package:frontend/components/favorite_button.dart';
@@ -16,18 +15,18 @@ class BookDetailScreen extends StatefulWidget {
 class _BookDetailScreenState extends State<BookDetailScreen>
     with SingleTickerProviderStateMixin {
   late AnimationController _animCtrl;
-  late Animation<double>   _fadeAnim;
-  late Animation<Offset>   _slideAnim;
+  late Animation<double> _fadeAnim;
+  late Animation<Offset> _slideAnim;
 
   // ── Palette ────────────────────────────────────────────────────────────────
-  static const _deepNavy   = Color(0xFF0D0F2B);
-  static const _midNavy    = Color(0xFF1A1F5E);
-  static const _royalBlue  = Color(0xFF2B4EFF);
-  static const _cream      = Color(0xFFFAF8F3);
-  static const _warmGold   = Color(0xFFD4A853);
-  static const _textDark   = Color(0xFF1C1C2E);
-  static const _textMuted  = Color(0xFF8A8A9A);
-  static const _divider    = Color(0xFFEAE8E3);
+  static const _deepNavy = Color(0xFF0D0F2B);
+  static const _midNavy = Color(0xFF1A1F5E);
+  static const _royalBlue = Color(0xFF2B4EFF);
+  static const _cream = Color(0xFFFAF8F3);
+  static const _warmGold = Color(0xFFD4A853);
+  static const _textDark = Color(0xFF1C1C2E);
+  static const _textMuted = Color(0xFF8A8A9A);
+  static const _divider = Color(0xFFEAE8E3);
 
   @override
   void initState() {
@@ -36,10 +35,7 @@ class _BookDetailScreenState extends State<BookDetailScreen>
       vsync: this,
       duration: const Duration(milliseconds: 600),
     );
-    _fadeAnim = CurvedAnimation(
-      parent: _animCtrl,
-      curve: Curves.easeOut,
-    );
+    _fadeAnim = CurvedAnimation(parent: _animCtrl, curve: Curves.easeOut);
     _slideAnim = Tween<Offset>(
       begin: const Offset(0, 0.12),
       end: Offset.zero,
@@ -84,10 +80,7 @@ class _BookDetailScreenState extends State<BookDetailScreen>
                       showBackground: false,
                     ),
                   ),
-                  _circleBtn(
-                    icon: Icons.share_outlined,
-                    onTap: () {},
-                  ),
+                  _circleBtn(icon: Icons.share_outlined, onTap: () {}),
                   const SizedBox(width: 8),
                 ],
                 flexibleSpace: FlexibleSpaceBar(
@@ -112,12 +105,7 @@ class _BookDetailScreenState extends State<BookDetailScreen>
           ),
 
           // ── Floating Read Now button ──────────────────────────────────────
-          Positioned(
-            bottom: 0,
-            left: 0,
-            right: 0,
-            child: _buildReadBar(book),
-          ),
+          Positioned(bottom: 0, left: 0, right: 0, child: _buildReadBar(book)),
         ],
       ),
     );
@@ -148,6 +136,7 @@ class _BookDetailScreenState extends State<BookDetailScreen>
             height: 220,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
+              // ignore: deprecated_member_use
               color: _royalBlue.withOpacity(0.08),
             ),
           ),
@@ -160,6 +149,7 @@ class _BookDetailScreenState extends State<BookDetailScreen>
             height: 160,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
+              // ignore: deprecated_member_use
               color: _warmGold.withOpacity(0.06),
             ),
           ),
@@ -178,12 +168,14 @@ class _BookDetailScreenState extends State<BookDetailScreen>
                     borderRadius: BorderRadius.circular(16),
                     boxShadow: [
                       BoxShadow(
+                        // ignore: deprecated_member_use
                         color: Colors.black.withOpacity(0.5),
                         blurRadius: 32,
                         offset: const Offset(0, 16),
                         spreadRadius: -4,
                       ),
                       BoxShadow(
+                        // ignore: deprecated_member_use
                         color: _royalBlue.withOpacity(0.2),
                         blurRadius: 48,
                         offset: const Offset(0, 8),
@@ -192,24 +184,29 @@ class _BookDetailScreenState extends State<BookDetailScreen>
                   ),
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(16),
-                    child: CachedNetworkImage(
-                      imageUrl: BookApi.instance.getCoverUrl(book.id),
-                      httpHeaders: BookApi.instance.imageHeaders,
+                    child: Image.network(
+                      BookApi.instance.getCoverUrl(book.id),
+                      headers: BookApi
+                          .instance
+                          .imageHeaders, // ✅ works on Flutter Web
                       width: 165,
                       height: 235,
                       fit: BoxFit.cover,
-                      placeholder: (_, __) => Container(
-                        width: 165,
-                        height: 235,
-                        color: _midNavy,
-                        child: const Center(
-                          child: CircularProgressIndicator(
-                            color: Colors.white38,
-                            strokeWidth: 2,
+                      loadingBuilder: (context, child, loadingProgress) {
+                        if (loadingProgress == null) return child;
+                        return Container(
+                          width: 165,
+                          height: 235,
+                          color: _midNavy,
+                          child: const Center(
+                            child: CircularProgressIndicator(
+                              color: Colors.white38,
+                              strokeWidth: 2,
+                            ),
                           ),
-                        ),
-                      ),
-                      errorWidget: (_, __, ___) => Container(
+                        );
+                      },
+                      errorBuilder: (context, error, stackTrace) => Container(
                         width: 165,
                         height: 235,
                         decoration: BoxDecoration(
@@ -243,6 +240,7 @@ class _BookDetailScreenState extends State<BookDetailScreen>
                 end: Alignment.bottomCenter,
                 colors: [
                   Colors.transparent,
+                  // ignore: deprecated_member_use
                   _cream.withOpacity(0.15),
                 ],
               ),
@@ -326,13 +324,13 @@ class _BookDetailScreenState extends State<BookDetailScreen>
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 24),
             child: Container(
-              padding: const EdgeInsets.symmetric(
-                  vertical: 16, horizontal: 8),
+              padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 8),
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(16),
                 boxShadow: [
                   BoxShadow(
+                    // ignore: deprecated_member_use
                     color: Colors.black.withOpacity(0.05),
                     blurRadius: 12,
                     offset: const Offset(0, 2),
@@ -451,14 +449,16 @@ class _BookDetailScreenState extends State<BookDetailScreen>
                   ),
                 ),
                 const SizedBox(height: 12),
-                _detailRow('Title',    book.title),
-                _detailRow('Author',   book.authorName ?? '—'),
-                _detailRow('Language', book.language   ?? '—'),
-                _detailRow('Pages',    '${book.page   ?? '—'}'),
-                _detailRow('Rating',
-                    book.rating != null
-                        ? '${book.rating!.toStringAsFixed(1)} / 5.0'
-                        : '—'),
+                _detailRow('Title', book.title),
+                _detailRow('Author', book.authorName ?? '—'),
+                _detailRow('Language', book.language ?? '—'),
+                _detailRow('Pages', '${book.page ?? '—'}'),
+                _detailRow(
+                  'Rating',
+                  book.rating != null
+                      ? '${book.rating!.toStringAsFixed(1)} / 5.0'
+                      : '—',
+                ),
               ],
             ),
           ),
@@ -476,6 +476,7 @@ class _BookDetailScreenState extends State<BookDetailScreen>
         color: _cream,
         boxShadow: [
           BoxShadow(
+            // ignore: deprecated_member_use
             color: Colors.black.withOpacity(0.08),
             blurRadius: 20,
             offset: const Offset(0, -4),
@@ -493,11 +494,7 @@ class _BookDetailScreenState extends State<BookDetailScreen>
               borderRadius: BorderRadius.circular(14),
               border: Border.all(color: _divider),
             ),
-            child: FavoriteButton(
-              book: book,
-              size: 22,
-              showBackground: false,
-            ),
+            child: FavoriteButton(book: book, size: 22, showBackground: false),
           ),
           const SizedBox(width: 14),
 
@@ -506,16 +503,17 @@ class _BookDetailScreenState extends State<BookDetailScreen>
             child: SizedBox(
               height: 54,
               child: ElevatedButton.icon(
-                onPressed: () => Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (_) => PdfViewerScreen(
-                      book: book,
-                      downloadUrl:
-                          BookApi.instance.getDownloadUrl(book.id),
-                    ),
-                  ),
-                ),
+                onPressed: ()  {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => PdfViewerScreen(
+                            book: book,
+                            downloadUrl: BookApi.instance.getPdfUrl(book.id),
+                          ),
+                        ),
+                      );
+                    },
                 icon: const Icon(Icons.play_circle_filled_rounded, size: 22),
                 label: const Text(
                   'Read Now',
@@ -543,11 +541,7 @@ class _BookDetailScreenState extends State<BookDetailScreen>
 
   // ── Helpers ────────────────────────────────────────────────────────────────
 
-  Widget _circleBtn({
-    IconData? icon,
-    Widget? child,
-    VoidCallback? onTap,
-  }) {
+  Widget _circleBtn({IconData? icon, Widget? child, VoidCallback? onTap}) {
     return GestureDetector(
       onTap: onTap,
       child: Container(
@@ -555,21 +549,22 @@ class _BookDetailScreenState extends State<BookDetailScreen>
         width: 38,
         height: 38,
         decoration: BoxDecoration(
+          // ignore: deprecated_member_use
           color: Colors.white.withOpacity(0.15),
           shape: BoxShape.circle,
+          // ignore: deprecated_member_use
           border: Border.all(color: Colors.white.withOpacity(0.2)),
         ),
-        child: child ??
-            Icon(icon, color: Colors.white, size: 18),
+        child: child ?? Icon(icon, color: Colors.white, size: 18),
       ),
     );
   }
 
   Widget _statBlock({
     required IconData icon,
-    required Color    iconColor,
-    required String   value,
-    required String   label,
+    required Color iconColor,
+    required String value,
+    required String label,
   }) {
     return Expanded(
       child: Column(
@@ -599,18 +594,16 @@ class _BookDetailScreenState extends State<BookDetailScreen>
     );
   }
 
-  Widget _vertDivider() => Container(
-        width: 1,
-        height: 48,
-        color: _divider,
-      );
+  Widget _vertDivider() => Container(width: 1, height: 48, color: _divider);
 
   Widget _tag(IconData icon, String label) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       decoration: BoxDecoration(
+        // ignore: deprecated_member_use
         color: _royalBlue.withOpacity(0.08),
         borderRadius: BorderRadius.circular(20),
+        // ignore: deprecated_member_use
         border: Border.all(color: _royalBlue.withOpacity(0.15)),
       ),
       child: Row(

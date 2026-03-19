@@ -17,7 +17,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      // ✅ AuthGate handles login ↔ register navigation
+      // AuthGate handles login ↔ register navigation
       home: const OnBoard(),
       routes: {
         '/login':    (context) => const AuthGate(),
@@ -50,7 +50,6 @@ class _AuthGateState extends State<AuthGate> {
 
   @override
   Widget build(BuildContext context) {
-    // ✅ onTap is ALWAYS passed — never null
     return _showLogin
         ? LoginPage(onTap: _goToRegister)
         : RegisterPage(onTap: _goToLogin);

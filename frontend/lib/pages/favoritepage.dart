@@ -12,12 +12,9 @@ class FavoritePage extends StatefulWidget {
 }
 
 class _FavoritePageState extends State<FavoritePage> {
-  // ── Palette ────────────────────────────────────────────────────────────────
-  static const _navy      = Color(0xFF1A1F5E);
+  // ── Palette ─────────────────────────────────
   static const _royalBlue = Color(0xFF2B4EFF);
   static const _bgGrey    = Color(0xFFF5F5F5);
-  static const _cardWhite = Color(0xFFFFFFFF);
-  static const _textMuted = Color(0xFF888888);
   static const _heartRed  = Color(0xFFE53935);
 
   final _fav = FavoriteService.instance;
@@ -97,6 +94,7 @@ class _FavoritePageState extends State<FavoritePage> {
                   padding: const EdgeInsets.symmetric(
                       horizontal: 14, vertical: 6),
                   decoration: BoxDecoration(
+                    // ignore: deprecated_member_use
                     color: _royalBlue.withOpacity(0.1),
                     borderRadius: BorderRadius.circular(20),
                   ),
@@ -127,6 +125,7 @@ class _FavoritePageState extends State<FavoritePage> {
             width: 100,
             height: 100,
             decoration: BoxDecoration(
+              // ignore: deprecated_member_use
               color: _heartRed.withOpacity(0.08),
               shape: BoxShape.circle,
             ),
@@ -196,6 +195,7 @@ class _FavoriteBookCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(16),
           boxShadow: [
             BoxShadow(
+              // ignore: deprecated_member_use
               color: Colors.black.withOpacity(0.07),
               blurRadius: 12,
               offset: const Offset(0, 3),
@@ -217,7 +217,7 @@ class _FavoriteBookCard extends StatelessWidget {
                     width: double.infinity,
                     height: 180,
                     fit: BoxFit.cover,
-                    errorBuilder: (_, __, ___) => Container(
+                    errorBuilder: (_, _, _) => Container(
                       height: 180,
                       color: Colors.teal.shade50,
                       child: const Center(
@@ -239,6 +239,7 @@ class _FavoriteBookCard extends StatelessWidget {
                         shape: BoxShape.circle,
                         boxShadow: [
                           BoxShadow(
+                            // ignore: deprecated_member_use
                             color: Colors.black.withOpacity(0.12),
                             blurRadius: 6,
                           ),

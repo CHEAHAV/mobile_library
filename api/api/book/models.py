@@ -14,10 +14,9 @@ class BOOK(Base):
     rating      = Column(Numeric(3, 2), nullable=False)
     language    = Column(String(64), nullable=False)
     page        = Column(Integer)
-    file_path   = Column(LargeBinary, nullable=False)  # binary PDF
     cover_image = Column(LargeBinary, nullable=False)  # binary image
-    file_name   = Column(String(255), nullable=False)  # PDF filename
     cover_name  = Column(String(255), nullable=False)  # image filename
+    file_path   = Column(String(255), nullable=False)  # PDF filename
     category_id = Column(String(64), ForeignKey("tbl_category.id"), nullable=False)
     create_at   = Column(DateTime, server_default=func.now())
 

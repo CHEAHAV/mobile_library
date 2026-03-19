@@ -36,7 +36,6 @@ dependencies:
   cupertino_icons: ^1.0.8
   http: ^1.6.0
   provider: ^6.1.5+1
-  flutter_pdfview: ^1.4.4
   shared_preferences: ^2.5.4
   image_picker: ^1.2.1
   path_provider: ^2.1.5
@@ -46,6 +45,8 @@ dependencies:
   drop_shadow: ^0.1.0
   google_fonts: ^8.0.2
   http_parser: ^4.1.2
+  url_launcher: ^6.3.2
+  syncfusion_flutter_pdfviewer: ^33.1.44
 
 dev_dependencies:
   flutter_test:

@@ -114,7 +114,7 @@ class _BookCard extends StatelessWidget {
               width: double.infinity,
               height: 130,
               fit: BoxFit.cover,
-              errorBuilder: (_, __, ___) => Container(
+              errorBuilder: (_, _, _) => Container(
                 height: 130,
                 decoration: BoxDecoration(
                   color: Colors.teal[50],

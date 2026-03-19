@@ -25,7 +25,8 @@ class BookApi {
     }
   }
 
-  String getCoverUrl(String bookId)    => '${ApiService.baseUrl}/book/$bookId/cover';
-  String getDownloadUrl(String bookId) => '${ApiService.baseUrl}/book/$bookId/download';
-  Map<String, String> get imageHeaders => ApiService.headers;
+String getCoverUrl(String bookId)    => '${ApiService.baseUrl}/book/$bookId/cover';
+String getDownloadUrl(String bookId) => '${ApiService.baseUrl}/book/$bookId/download';
+String getPdfUrl(String bookId)      => '${ApiService.baseUrl}/book/$bookId/pdf'; // ← ADD
+Map<String, String> get imageHeaders => ApiService.headers;
 }

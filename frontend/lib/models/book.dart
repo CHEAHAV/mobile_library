@@ -27,16 +27,18 @@ class Book {
 
   factory Book.fromJson(Map<String, dynamic> json) {
     return Book(
-      id:          json['id'] as String,
-      title:       json['title'] as String? ?? '',
+      id: json['id'] as String,
+      title: json['title'] as String? ?? '',
       description: json['description'] as String?,
-      authorName:  json['author_name'] as String?,
-      rating:      json['rating'] != null ? double.parse(json['rating'].toString()) : null,
-      language:    json['language'] as String?,
-      page:        (json['page'] as num?)?.toInt(),
-      coverName:   json['cover_name'] as String? ?? '',
-      fileName:    json['file_name'] as String? ?? '',
-      categoryId:  json['category_id'] as String,
+      authorName: json['author_name'] as String?,
+      rating: json['rating'] != null
+          ? double.parse(json['rating'].toString())
+          : null,
+      language: json['language'] as String?,
+      page: (json['page'] as num?)?.toInt(),
+      coverName: json['cover_name'] as String? ?? '',
+      fileName: json['file_path'],
+      categoryId: json['category_id'] as String,
     );
   }
 }
@@ -45,8 +47,8 @@ class Book {
 class BorrowedBook {
   final String title;
   final String dueDate;
-  final bool   isUrgent;
-  final Color  coverColor;
+  final bool isUrgent;
+  final Color coverColor;
 
   const BorrowedBook({
     required this.title,

@@ -101,6 +101,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 width: 72,
                 height: 72,
                 decoration: BoxDecoration(
+                  // ignore: deprecated_member_use
                   color: _darkGreen.withOpacity(0.1),
                   shape: BoxShape.circle,
                 ),
@@ -276,10 +277,12 @@ class _RegisterPageState extends State<RegisterPage> {
                         hint: 'John Doe',
                         icon: Icons.person_outline,
                         validator: (v) {
-                          if (v == null || v.trim().isEmpty)
+                          if (v == null || v.trim().isEmpty) {
                             return 'Name is required';
-                          if (v.trim().length < 3)
+                          }
+                          if (v.trim().length < 3) {
                             return 'At least 3 characters';
+                          }
                           return null;
                         },
                       ),
@@ -294,10 +297,12 @@ class _RegisterPageState extends State<RegisterPage> {
                         icon: Icons.email_outlined,
                         keyboardType: TextInputType.emailAddress,
                         validator: (v) {
-                          if (v == null || v.trim().isEmpty)
+                          if (v == null || v.trim().isEmpty) {
                             return 'Email is required';
-                          if (!v.contains('@') || !v.contains('.'))
+                          }
+                          if (!v.contains('@') || !v.contains('.')) {
                             return 'Invalid email';
+                          }
                           return null;
                         },
                       ),
@@ -312,8 +317,9 @@ class _RegisterPageState extends State<RegisterPage> {
                         icon: Icons.phone_outlined,
                         keyboardType: TextInputType.phone,
                         validator: (v) {
-                          if (v == null || v.trim().isEmpty)
+                          if (v == null || v.trim().isEmpty) {
                             return 'Phone is required';
+                          }
                           return null;
                         },
                       ),
@@ -353,8 +359,9 @@ class _RegisterPageState extends State<RegisterPage> {
                               () => _obscurePassword = !_obscurePassword),
                         ),
                         validator: (v) {
-                          if (v == null || v.isEmpty)
+                          if (v == null || v.isEmpty) {
                             return 'Password is required';
+                          }
                           if (v.length < 6) return 'At least 6 characters';
                           return null;
                         },

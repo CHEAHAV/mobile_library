@@ -65,7 +65,7 @@ This is a FastAPI-based project designed for testing purposes. Follow the steps 
 
 ## web backend
 
-http://127.0.0.1:8000/docs
+http://127.0.0.1:8000
 
 ## web database pgAmin
 

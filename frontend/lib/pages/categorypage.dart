@@ -105,7 +105,7 @@ class _CategoryPageState extends State<CategoryPage> {
                   return ListView.separated(
                     padding: const EdgeInsets.fromLTRB(16, 4, 16, 24),
                     itemCount: _filtered.length,
-                    separatorBuilder: (_, __) => const SizedBox(height: 10),
+                    separatorBuilder: (_, _) => const SizedBox(height: 10),
                     itemBuilder: (_, i) =>
                         _categoryTile(_filtered[i], i),
                   );
@@ -155,6 +155,7 @@ class _CategoryPageState extends State<CategoryPage> {
             borderRadius: BorderRadius.circular(30),
             boxShadow: [
               BoxShadow(
+                // ignore: deprecated_member_use
                 color: Colors.black.withOpacity(0.07),
                 blurRadius: 10,
                 offset: const Offset(0, 2),
@@ -201,12 +202,14 @@ class _CategoryPageState extends State<CategoryPage> {
           borderRadius: BorderRadius.circular(14),
           border: Border.all(
             color: isSelected
+                // ignore: deprecated_member_use
                 ? const Color(0xFF2B4EFF).withOpacity(0.4)
                 : Colors.transparent,
             width: 1.5,
           ),
           boxShadow: [
             BoxShadow(
+              // ignore: deprecated_member_use
               color: Colors.black.withOpacity(0.05),
               blurRadius: 8,
               offset: const Offset(0, 2),
